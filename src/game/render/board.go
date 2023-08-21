@@ -70,7 +70,7 @@ func SelectUnicodeSpriteForPiece(curPiece piece.Piece) string {
 	return sprite
 }
 
-func Render(curBoard *board.Board) {
+func RenderBoard(curBoard *board.Board) {
 	for f := coords.File(8); f >= 1; f-- {
 		line := ""
 		for r := coords.A; r <= coords.H; r++ {
