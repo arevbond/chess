@@ -5,13 +5,17 @@ import (
 	"chess/src/game/coords"
 )
 
+type Bishop struct {
+	color       color.Color
+	coordinates coords.Coordinates
+}
+
 func NewBishop(color color.Color, coordinates coords.Coordinates) *Bishop {
 	return &Bishop{color: color, coordinates: coordinates}
 }
 
-type Bishop struct {
-	color       color.Color
-	coordinates coords.Coordinates
+func (b *Bishop) Name() string {
+	return "Bishop"
 }
 
 func (b *Bishop) Color() color.Color {
@@ -30,29 +34,6 @@ func (b *Bishop) SetColor(color color.Color) {
 	b.color = color
 }
 
-//
-//func (b *Bishop) AvailableMoves(curBoard board.Board) map[*coords.Coordinates]bool {
-//	availableMoves := map[*coords.Coordinates]bool{}
-//	shifts := b.Shifts()
-//	for shift, _ := range shifts {
-//		if b.coordinates.CanShift(shift) {
-//			newCoordinates := b.coordinates.Shift(shift)
-//			if b.IsSquareAvailableForMove(newCoordinates, curBoard) {
-//				availableMoves[newCoordinates] = true
-//			}
-//		}
-//
-//	}
-//	return availableMoves
-//}
-//
-//func (b *Bishop) Shifts() map[*coords.CoordinatesShift]bool {
-//	return map[*coords.CoordinatesShift]bool{}
-//}
-//
-//func (b *Bishop) IsSquareAvailableForMove(coordinates *coords.Coordinates, curBoard board.Board) bool {
-//	if !curBoard.IsSquareAvailableForMoveSimple(coordinates, b) {
-//		return false
-//	}
-//	return true
-//}
+func (b *Bishop) Shifts() map[coords.CoordinatesShift]bool {
+	return map[coords.CoordinatesShift]bool{}
+}

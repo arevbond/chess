@@ -24,11 +24,11 @@ func NewCoordinates(rank Rank, file File) Coordinates {
 	return Coordinates{File: file, Rank: rank}
 }
 
-func (c *Coordinates) CanShift(shift *CoordinatesShift) bool {
-	newCoords := NewCoordinates(c.Rank+shift.RankShift, c.File+shift.FileShift)
+func (c Coordinates) CanShift(shift CoordinatesShift) bool {
+	newCoords := NewCoordinates(shift.RankShift, shift.FileShift)
 	return newCoords.Rank >= 'A' && newCoords.Rank <= 'H' && newCoords.File >= 1 && newCoords.File <= 8
 }
 
-func (c *Coordinates) Shift(shift CoordinatesShift) Coordinates {
-	return NewCoordinates(c.Rank+shift.RankShift, c.File+shift.FileShift)
+func (c Coordinates) Shift(shift CoordinatesShift) Coordinates {
+	return NewCoordinates(shift.RankShift, shift.FileShift)
 }

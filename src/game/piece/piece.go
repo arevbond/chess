@@ -6,11 +6,10 @@ import (
 )
 
 type Piece interface {
+	Name() string
 	Color() color.Color
 	Coordinates() coords.Coordinates
 	SetCoordinates(coordinates coords.Coordinates)
 	SetColor(color color.Color)
-
-	//Shifts() map[*coords.CoordinatesShift]bool
-	//AvailableMoves(board.Board) map[*coords.Coordinates]bool
+	Shifts() map[coords.CoordinatesShift]bool
 }

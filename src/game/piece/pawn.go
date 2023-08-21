@@ -10,6 +10,14 @@ type Pawn struct {
 	coordinates coords.Coordinates
 }
 
+func NewPawn(color color.Color, coordinates coords.Coordinates) *Pawn {
+	return &Pawn{color: color, coordinates: coordinates}
+}
+
+func (p *Pawn) Name() string {
+	return "Pawn"
+}
+
 func (p *Pawn) Color() color.Color {
 	return p.color
 }
@@ -26,6 +34,6 @@ func (p *Pawn) SetColor(color color.Color) {
 	p.color = color
 }
 
-func NewPawn(color color.Color, coordinates coords.Coordinates) *Pawn {
-	return &Pawn{color: color, coordinates: coordinates}
+func (p *Pawn) Shifts() map[coords.CoordinatesShift]bool {
+	return nil
 }

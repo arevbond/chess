@@ -100,5 +100,26 @@ func (b *Board) IsSquareAvailableForMoveSimple(coordinates coords.Coordinates, c
 		return true
 	}
 	otherPiece, _ := b.GetPiece(coordinates)
-	return curPiece.Color() != otherPiece.Color()
+	return curPiece.Color() != otherPiece.Color() && otherPiece.Name() != "King"
+}
+
+func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, curPiece piece.Piece) bool {
+	if !b.IsSquareAvailableForMoveSimple(coordinates, curPiece) {
+		return false
+	}
+	return true
+}
+
+func (b *Board) AvailableMoves(curPiece piece.Piece) map[coords.Coordinates]bool {
+	availableMoves := map[coords.Coordinates]bool{}
+	shifts := curPiece.Shifts()
+	for shift, _ := range shifts {
+		if curPiece.Coordinates().CanShift(shift) {
+			newCoordinates := curPiece.Coordinates().Shift(shift)
+			if b.IsSquareAvailableForMove(newCoordinates, curPiece) {
+				availableMoves[newCoordinates] = true
+			}
+		}
+	}
+	return availableMoves
 }

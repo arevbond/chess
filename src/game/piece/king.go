@@ -10,6 +10,14 @@ type King struct {
 	coordinates coords.Coordinates
 }
 
+func NewKing(color color.Color, coordinates coords.Coordinates) *King {
+	return &King{color: color, coordinates: coordinates}
+}
+
+func (k *King) Name() string {
+	return "King"
+}
+
 func (k *King) Color() color.Color {
 	return k.color
 }
@@ -26,6 +34,6 @@ func (k *King) SetColor(color color.Color) {
 	k.color = color
 }
 
-func NewKing(color color.Color, coordinates coords.Coordinates) *King {
-	return &King{color: color, coordinates: coordinates}
+func (k *King) Shifts() map[coords.CoordinatesShift]bool {
+	return nil
 }
