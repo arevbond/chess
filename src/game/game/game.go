@@ -11,15 +11,16 @@ func GameLoop(board *board.Board) {
 	var isWhiteToMove bool = true
 	var curColor color.Color
 	for {
-		//render
-		render.RenderBoard(board)
-
-		// input coords
 		if isWhiteToMove {
 			curColor = color.White
 		} else {
 			curColor = color.Black
 		}
+
+		//render
+		render.RenderBoard(curColor, board)
+
+		// input coords
 		pieceCoords, curPiece := inputCoords.InputCoordsOwnPieceCanMove(curColor, board)
 		coordsToMove := inputCoords.InputCoordsYourPieceToMove(curPiece, board)
 

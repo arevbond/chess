@@ -70,7 +70,7 @@ func SelectUnicodeSpriteForPiece(curPiece piece.Piece) string {
 	return sprite
 }
 
-func RenderBoard(curBoard *board.Board) {
+func RenderBoardForWhite(curBoard *board.Board) {
 	for f := coords.File(8); f >= 1; f-- {
 		line := ""
 		for r := coords.A; r <= coords.H; r++ {
@@ -85,5 +85,31 @@ func RenderBoard(curBoard *board.Board) {
 			}
 		}
 		fmt.Println(line)
+	}
+}
+
+func RenderBoardForBlack(curBoard *board.Board) {
+	for f := coords.File(1); f <= 8; f++ {
+		line := ""
+		for r := coords.A; r <= coords.H; r++ {
+			coordinates := coords.NewCoordinates(r, f)
+			if curBoard.IsSquareEmpty(coordinates) {
+				line += GetSpriteForEmptySquare(coordinates)
+			} else {
+				curPiece, ok := curBoard.GetPiece(coordinates)
+				if ok {
+					line += GetPieceSprite(curPiece)
+				}
+			}
+		}
+		fmt.Println(line)
+	}
+}
+
+func RenderBoard(curColor color.Color, curBoard *board.Board) {
+	if curColor == color.White {
+		RenderBoardForWhite(curBoard)
+	} else if curColor == color.Black {
+		RenderBoardForBlack(curBoard)
 	}
 }
