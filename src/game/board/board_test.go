@@ -70,6 +70,27 @@ func TestBoard_RemovePiece(t *testing.T) {
 	}
 }
 
+func TestBoard_MovePiece(t *testing.T) {
+	board := NewBoard()
+
+	var tests = []struct {
+		from, to coords.Coordinates
+	}{
+		{coords.Coordinates{Rank: coords.A, File: coords.File(1)}, coords.Coordinates{Rank: coords.A, File: coords.File(2)}},
+		{coords.Coordinates{Rank: coords.B, File: coords.File(1)}, coords.Coordinates{Rank: coords.G, File: coords.File(2)}},
+		{coords.Coordinates{Rank: coords.C, File: coords.File(1)}, coords.Coordinates{Rank: coords.H, File: coords.File(2)}},
+	}
+	for _, tt := range tests {
+		queen := piece.NewQueen(color.White, tt.from)
+		board.SetPiece(tt.from, queen)
+		board.MovePiece(tt.from, tt.to)
+		if curPiece, ok := board.GetPiece(tt.to); !ok || curPiece != queen {
+			t.Errorf("piece %s doen't move from %q%d to %q%d", queen.Name(), tt.from.Rank, tt.from.File,
+				tt.to.Rank, tt.to.File)
+		}
+	}
+}
+
 func TestBoard_IsSquareDark(t *testing.T) {
 	board := NewBoard()
 	var tests = []struct {
@@ -205,3 +226,62 @@ func TestBoard_IsSquareEmpty(t *testing.T) {
 		}
 	}
 }
+
+func TestBoard_IsSquareAvailableForMoveSimple(t *testing.T) {
+	board := NewBoard()
+
+	whiteKingCoords := coords.NewCoordinates(coords.A, coords.File(1))
+	board.SetPiece(whiteKingCoords, piece.NewKing(color.White, whiteKingCoords))
+
+	blackKingCoords := coords.NewCoordinates(coords.B, coords.File(1))
+	board.SetPiece(blackKingCoords, piece.NewKing(color.Black, blackKingCoords))
+
+	whitePawnCoords := coords.NewCoordinates(coords.C, coords.File(1))
+	board.SetPiece(whitePawnCoords, piece.NewPawn(color.White, whitePawnCoords))
+
+	blackPawnCoords := coords.NewCoordinates(coords.D, coords.File(1))
+	board.SetPiece(blackPawnCoords, piece.NewPawn(color.Black, blackPawnCoords))
+
+	var tests = []struct {
+		name        string
+		inputCoords coords.Coordinates
+		inputPiece  piece.Piece
+		want        bool
+	}{
+		{"Black piece try move on white King",
+			whiteKingCoords,
+			piece.NewQueen(color.Black, coords.NewCoordinates(coords.A, coords.File(2))),
+			false},
+		{"White piece try move on black King",
+			blackKingCoords,
+			piece.NewQueen(color.White, coords.NewCoordinates(coords.A, coords.File(2))),
+			false},
+		{"Black piece try move on white piece",
+			whitePawnCoords,
+			piece.NewQueen(color.Black, coords.NewCoordinates(coords.A, coords.File(2))),
+			true},
+		{"White piece try move on black piece",
+			blackPawnCoords,
+			piece.NewQueen(color.White, coords.NewCoordinates(coords.A, coords.File(2))),
+			true},
+		{"White piece try move on empty square",
+			coords.NewCoordinates(coords.B, coords.File(5)),
+			piece.NewQueen(color.White, coords.NewCoordinates(coords.A, coords.File(2))),
+			true},
+		{"Black piece try move on empty square",
+			coords.NewCoordinates(coords.B, coords.File(6)),
+			piece.NewQueen(color.Black, coords.NewCoordinates(coords.A, coords.File(2))),
+			true},
+	}
+
+	for _, tt := range tests {
+		ans := board.IsSquareAvailableForMoveSimple(tt.inputCoords, tt.inputPiece)
+		if ans != tt.want {
+			t.Errorf("%s - got %t, want %t", tt.name, ans, tt.want)
+		}
+	}
+}
+
+//func TestBoard_SetupPositionFromFEN(t *testing.T) {
+//
+//}
