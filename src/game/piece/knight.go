@@ -36,12 +36,6 @@ func (k *Knight) SetColor(color color.Color) {
 
 func (k *Knight) Shifts() map[coords.CoordinatesShift]bool {
 	shifts := [][]int{{2, 1}, {1, 2}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}}
-	coordsShifts := make(map[coords.CoordinatesShift]bool)
-
-	for _, shift := range shifts {
-		rShift, fShift := coords.Rank(shift[0]), coords.File(shift[1])
-		curCoordsShifts := coords.NewCoordinatesShift(k.coordinates.Rank+rShift, k.coordinates.File+fShift)
-		coordsShifts[curCoordsShifts] = true
-	}
+	coordsShifts := coords.CalculateCoordinatesShift(shifts, k.Coordinates())
 	return coordsShifts
 }

@@ -35,5 +35,10 @@ func (r *Rock) SetColor(color color.Color) {
 }
 
 func (r *Rock) Shifts() map[coords.CoordinatesShift]bool {
-	return nil
+	shifts := [][]int{{1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0},
+		{-1, 0}, {-2, 0}, {-3, 0}, {-4, 0}, {-5, 0}, {-6, 0}, {-7, 0},
+		{0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6}, {0, 7},
+		{0, -1}, {0, -2}, {0, -3}, {0, -4}, {0, -5}, {0, -6}, {0, -7}}
+	coordsShifts := coords.CalculateCoordinatesShift(shifts, r.Coordinates())
+	return coordsShifts
 }

@@ -75,18 +75,18 @@ func (b *Board) AvailableMoves(curPiece piece.Piece) map[coords.Coordinates]bool
 
 func (b *Board) SetupDefaultPiecesPositions() {
 	// set pawns
-	for r := coords.A; r <= coords.H; r++ {
-		fWhite := coords.File(2)
-		coordsWhite := coords.NewCoordinates(r, fWhite)
-		pawnWhite := piece.NewPawn(color.White, coordsWhite)
-
-		fBlack := coords.File(7)
-		coordsBlack := coords.NewCoordinates(r, fBlack)
-		pawnBlack := piece.NewPawn(color.Black, coordsBlack)
-
-		b.SetPiece(coordsWhite, pawnWhite)
-		b.SetPiece(coordsBlack, pawnBlack)
-	}
+	//for r := coords.A; r <= coords.H; r++ {
+	//	fWhite := coords.File(2)
+	//	coordsWhite := coords.NewCoordinates(r, fWhite)
+	//	pawnWhite := piece.NewPawn(color.White, coordsWhite)
+	//
+	//	fBlack := coords.File(7)
+	//	coordsBlack := coords.NewCoordinates(r, fBlack)
+	//	pawnBlack := piece.NewPawn(color.Black, coordsBlack)
+	//
+	//	b.SetPiece(coordsWhite, pawnWhite)
+	//	b.SetPiece(coordsBlack, pawnBlack)
+	//}
 
 	// set rocks
 	coordsBlack := coords.NewCoordinates('A', 8)

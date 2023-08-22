@@ -35,5 +35,10 @@ func (b *Bishop) SetColor(color color.Color) {
 }
 
 func (b *Bishop) Shifts() map[coords.CoordinatesShift]bool {
-	return map[coords.CoordinatesShift]bool{}
+	shifts := [][]int{{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}, {7, 7},
+		{-1, -1}, {-2, -2}, {-3, -3}, {-4, -4}, {-5, -5}, {-6, -6}, {-7, -7},
+		{1, -1}, {2, -2}, {3, -3}, {4, -4}, {5, -5}, {6, -6}, {7, -7},
+		{-1, 1}, {-2, 2}, {-3, 3}, {-4, 4}, {-5, 5}, {-6, 6}, {-7, 7}}
+	coordsShifts := coords.CalculateCoordinatesShift(shifts, b.Coordinates())
+	return coordsShifts
 }

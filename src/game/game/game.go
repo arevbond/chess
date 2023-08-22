@@ -22,10 +22,10 @@ func GameLoop(board *board.Board) {
 
 		// input coords
 		pieceCoords, curPiece := inputCoords.InputCoordsOwnPieceCanMove(curColor, board)
-		coordsToMove := inputCoords.InputCoordsYourPieceToMove(curPiece, board)
+		targetCoords := inputCoords.InputCoordsYourPieceToMove(curPiece, board)
 
 		// make move
-		board.MovePiece(pieceCoords, coordsToMove)
+		board.MovePiece(pieceCoords, targetCoords)
 
 		// pass move
 		isWhiteToMove = !isWhiteToMove

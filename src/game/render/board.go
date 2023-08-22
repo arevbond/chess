@@ -91,7 +91,7 @@ func RenderBoardForWhite(curBoard *board.Board) {
 func RenderBoardForBlack(curBoard *board.Board) {
 	for f := coords.File(1); f <= 8; f++ {
 		line := ""
-		for r := coords.A; r <= coords.H; r++ {
+		for r := coords.H; r >= coords.A; r-- {
 			coordinates := coords.NewCoordinates(r, f)
 			if curBoard.IsSquareEmpty(coordinates) {
 				line += GetSpriteForEmptySquare(coordinates)

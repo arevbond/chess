@@ -87,11 +87,11 @@ func InputCoordsOwnPieceCanMove(color color.Color, board *board.Board) (coords.C
 
 func InputCoordsYourPieceToMove(piece piece.Piece, board *board.Board) coords.Coordinates {
 	var coordsToMove coords.Coordinates
-	avaliableMoves := board.AvailableMoves(piece)
+	availableMoves := board.AvailableMoves(piece)
 	for {
 		fmt.Println("Where you want to move?")
 		coordsToMove = InputCoordinates()
-		if _, ok := avaliableMoves[coordsToMove]; !ok {
+		if _, ok := availableMoves[coordsToMove]; !ok {
 			fmt.Println("Impossible move")
 			continue
 		} else {
