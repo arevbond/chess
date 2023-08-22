@@ -25,6 +25,7 @@ func NewCoordinates(rank Rank, file File) Coordinates {
 }
 
 func (c Coordinates) CanShift(shift CoordinatesShift) bool {
+	// проверка на то, чтобы новая координата не выходила за пределы доски
 	newCoords := NewCoordinates(shift.RankShift, shift.FileShift)
 	return newCoords.Rank >= 'A' && newCoords.Rank <= 'H' && newCoords.File >= 1 && newCoords.File <= 8
 }
