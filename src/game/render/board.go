@@ -14,19 +14,20 @@ const (
 	AnsiWhitePieceColor string = "\u001B[97m"
 	AnsiBlackPieceColor string = "\u001B[30m"
 
-	AnsiWhiteSquareBackground string = "\u001B[47m"
-	AnsiBlackSquareBackground string = "\u001B[0;100m"
+	AnsiWhiteSquareBackground       string = "\u001B[47m"
+	AnsiBlackSquareBackground       string = "\u001B[0;100m"
+	AnsiHighlightedSquareBackground        = "\u001B[45m"
 )
 
 func GetSpriteForEmptySquare(coordinates coords.Coordinates) string {
-	return ColorizeSprite("   ", color.White, IsSquareDark(coordinates))
+	return ColorizeSprite("   ", color.White, IsSquareDark(coordinates), false)
 }
 
 func IsSquareDark(coordinate coords.Coordinates) bool {
 	return (int(coordinate.File)+int(coordinate.Rank))%2 == 0
 }
 
-func ColorizeSprite(sprite string, pieceColor color.Color, isSquareDark bool) string {
+func ColorizeSprite(sprite string, pieceColor color.Color, isSquareDark bool, isHighLighted bool) string {
 	var pColor, backgroundColor string
 
 	if pieceColor == color.White {
@@ -35,7 +36,9 @@ func ColorizeSprite(sprite string, pieceColor color.Color, isSquareDark bool) st
 		pColor = AnsiBlackPieceColor
 	}
 
-	if isSquareDark {
+	if isHighLighted {
+		backgroundColor = AnsiHighlightedSquareBackground
+	} else if isSquareDark {
 		backgroundColor = AnsiBlackSquareBackground
 	} else {
 		backgroundColor = AnsiWhiteSquareBackground
@@ -48,7 +51,7 @@ func GetPieceSprite(curPiece piece.Piece) string {
 	pieceColor := curPiece.Color()
 	pieceCoords := curPiece.Coordinates()
 	sprite := SelectUnicodeSpriteForPiece(curPiece)
-	return ColorizeSprite(sprite, pieceColor, IsSquareDark(pieceCoords))
+	return ColorizeSprite(sprite, pieceColor, IsSquareDark(pieceCoords), false)
 }
 
 func SelectUnicodeSpriteForPiece(curPiece piece.Piece) string {
@@ -70,7 +73,7 @@ func SelectUnicodeSpriteForPiece(curPiece piece.Piece) string {
 	return sprite
 }
 
-func RenderBoardForWhite(curBoard *board.Board) {
+func RenderBoardForWhite(curBoard *board.Board, withMoves bool) {
 	for f := coords.File(8); f >= 1; f-- {
 		line := ""
 		for r := coords.A; r <= coords.H; r++ {
@@ -108,7 +111,7 @@ func RenderBoardForBlack(curBoard *board.Board) {
 
 func RenderBoard(curColor color.Color, curBoard *board.Board) {
 	if curColor == color.White {
-		RenderBoardForWhite(curBoard)
+		RenderBoardForWhite(curBoard, false)
 	} else if curColor == color.Black {
 		RenderBoardForBlack(curBoard)
 	}

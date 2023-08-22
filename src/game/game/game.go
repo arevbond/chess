@@ -22,6 +22,10 @@ func GameLoop(board *board.Board) {
 
 		// input coords
 		pieceCoords, curPiece := inputCoords.InputCoordsOwnPieceCanMove(curColor, board)
+
+		// render board with available moves
+		// render.RenderBoardWithAvailablePieceMoves(curColor, board, curPiece)
+
 		targetCoords := inputCoords.InputCoordsYourPieceToMove(curPiece, board)
 
 		// make move

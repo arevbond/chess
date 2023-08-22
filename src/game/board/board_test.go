@@ -10,7 +10,7 @@ import (
 func TestBoard_SetPiece(t *testing.T) {
 	curBoard := NewBoard()
 	knightCoords := coords.Coordinates{File: 1, Rank: 'B'}
-	knight := piece.NewKnight(color.White, knightCoords)
+	knight := PieceFromFenChar('N', knightCoords)
 	curBoard.SetPiece(knightCoords, knight)
 	if k, ok := curBoard.Pieces[knightCoords]; !ok || k != knight {
 		t.Errorf("func Board.SetPiece doesn't set knight")

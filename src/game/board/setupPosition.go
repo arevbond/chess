@@ -25,36 +25,44 @@ func (b *Board) SetupPositionFromFEN(fen string) {
 				if err != nil {
 					log.Fatal(err)
 				}
-				rank += coords.Rank(digit - 1)
+				rank += coords.Rank(digit)
 				continue
 			}
-			var curColor color.Color
-			var curPiece piece.Piece
 			curCoords := coords.NewCoordinates(rank, file)
-			curColor = color.White
-			if unicode.IsLower(symbol) {
-				curColor = color.Black
-			}
-			symbol = unicode.ToUpper(symbol)
-
-			switch symbol {
-			case 'R':
-				curPiece = piece.NewRock(curColor, curCoords)
-			case 'N':
-				curPiece = piece.NewKnight(curColor, curCoords)
-			case 'B':
-				curPiece = piece.NewBishop(curColor, curCoords)
-			case 'Q':
-				curPiece = piece.NewQueen(curColor, curCoords)
-			case 'K':
-				curPiece = piece.NewKing(curColor, curCoords)
-			case 'P':
-				curPiece = piece.NewPawn(curColor, curCoords)
-			}
+			curPiece := PieceFromFenChar(symbol, curCoords)
 			b.SetPiece(curCoords, curPiece)
 			rank++
 		}
 	}
+}
+
+func PieceFromFenChar(symbol rune, coordinates coords.Coordinates) piece.Piece {
+	var curPiece piece.Piece
+	var curColor color.Color
+
+	curColor = color.White
+	if unicode.IsLower(symbol) {
+		curColor = color.Black
+	}
+	symbol = unicode.ToUpper(symbol)
+
+	switch symbol {
+	case 'R':
+		curPiece = piece.NewRock(curColor, coordinates)
+	case 'N':
+		curPiece = piece.NewKnight(curColor, coordinates)
+	case 'B':
+		curPiece = piece.NewBishop(curColor, coordinates)
+	case 'Q':
+		curPiece = piece.NewQueen(curColor, coordinates)
+	case 'K':
+		curPiece = piece.NewKing(curColor, coordinates)
+	case 'P':
+		curPiece = piece.NewPawn(curColor, coordinates)
+	default:
+		log.Fatalf("Unknow fen symbol for piece - %q", symbol)
+	}
+	return curPiece
 }
 
 func (b *Board) SetupDefaultPiecesPositions() {
