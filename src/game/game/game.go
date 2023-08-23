@@ -9,27 +9,27 @@ import (
 
 func GameLoop(board *board.Board) {
 	var isWhiteToMove bool = true
-	var curColor color.Color
+	var pieceColor color.Color
 	for {
 		if isWhiteToMove {
-			curColor = color.White
+			pieceColor = color.White
 		} else {
-			curColor = color.Black
+			pieceColor = color.Black
 		}
 
 		//render
-		render.RenderBoard(curColor, board)
+		render.RenderBoard(pieceColor, board)
 
 		// input coords
-		pieceCoords, curPiece := inputCoords.InputCoordsOwnPieceCanMove(curColor, board)
+		figureCoords, figure := inputCoords.InputCoordsOwnPieceCanMove(pieceColor, board)
 
 		// render board with available moves
-		// render.RenderBoardWithAvailablePieceMoves(curColor, board, curPiece)
+		render.RenderBoardWithAvailablePieceMoves(pieceColor, board, figure)
 
-		targetCoords := inputCoords.InputCoordsYourPieceToMove(curPiece, board)
+		targetCoords := inputCoords.InputCoordsYourPieceToMove(figure, board)
 
 		// make move
-		board.MovePiece(pieceCoords, targetCoords)
+		board.MovePiece(figureCoords, targetCoords)
 
 		// pass move
 		isWhiteToMove = !isWhiteToMove

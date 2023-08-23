@@ -19,8 +19,8 @@ const (
 	AnsiHighlightedSquareBackground        = "\u001B[45m"
 )
 
-func GetSpriteForEmptySquare(coordinates coords.Coordinates) string {
-	return ColorizeSprite("   ", color.White, IsSquareDark(coordinates), false)
+func GetSpriteForEmptySquare(coordinates coords.Coordinates, isHighLighted bool) string {
+	return ColorizeSprite("   ", color.White, IsSquareDark(coordinates), isHighLighted)
 }
 
 func IsSquareDark(coordinate coords.Coordinates) bool {
@@ -47,11 +47,11 @@ func ColorizeSprite(sprite string, pieceColor color.Color, isSquareDark bool, is
 	return result + AnsiReset
 }
 
-func GetPieceSprite(curPiece piece.Piece) string {
-	pieceColor := curPiece.Color()
-	pieceCoords := curPiece.Coordinates()
-	sprite := SelectUnicodeSpriteForPiece(curPiece)
-	return ColorizeSprite(sprite, pieceColor, IsSquareDark(pieceCoords), false)
+func GetPieceSprite(figure piece.Piece, isHighLighted bool) string {
+	pieceColor := figure.Color()
+	pieceCoords := figure.Coordinates()
+	sprite := SelectUnicodeSpriteForPiece(figure)
+	return ColorizeSprite(sprite, pieceColor, IsSquareDark(pieceCoords), isHighLighted)
 }
 
 func SelectUnicodeSpriteForPiece(curPiece piece.Piece) string {
@@ -73,17 +73,17 @@ func SelectUnicodeSpriteForPiece(curPiece piece.Piece) string {
 	return sprite
 }
 
-func RenderBoardForWhite(curBoard *board.Board, withMoves bool) {
+func RenderBoardForWhite(gameBoard *board.Board) {
 	for f := coords.File(8); f >= 1; f-- {
 		line := ""
 		for r := coords.A; r <= coords.H; r++ {
 			coordinates := coords.NewCoordinates(r, f)
-			if curBoard.IsSquareEmpty(coordinates) {
-				line += GetSpriteForEmptySquare(coordinates)
+			if gameBoard.IsSquareEmpty(coordinates) {
+				line += GetSpriteForEmptySquare(coordinates, false)
 			} else {
-				curPiece, ok := curBoard.GetPiece(coordinates)
+				figure, ok := gameBoard.GetPiece(coordinates)
 				if ok {
-					line += GetPieceSprite(curPiece)
+					line += GetPieceSprite(figure, false)
 				}
 			}
 		}
@@ -91,17 +91,17 @@ func RenderBoardForWhite(curBoard *board.Board, withMoves bool) {
 	}
 }
 
-func RenderBoardForBlack(curBoard *board.Board) {
+func RenderBoardForBlack(gameBoard *board.Board) {
 	for f := coords.File(1); f <= 8; f++ {
 		line := ""
 		for r := coords.H; r >= coords.A; r-- {
 			coordinates := coords.NewCoordinates(r, f)
-			if curBoard.IsSquareEmpty(coordinates) {
-				line += GetSpriteForEmptySquare(coordinates)
+			if gameBoard.IsSquareEmpty(coordinates) {
+				line += GetSpriteForEmptySquare(coordinates, false)
 			} else {
-				curPiece, ok := curBoard.GetPiece(coordinates)
+				curPiece, ok := gameBoard.GetPiece(coordinates)
 				if ok {
-					line += GetPieceSprite(curPiece)
+					line += GetPieceSprite(curPiece, false)
 				}
 			}
 		}
@@ -109,10 +109,65 @@ func RenderBoardForBlack(curBoard *board.Board) {
 	}
 }
 
-func RenderBoard(curColor color.Color, curBoard *board.Board) {
-	if curColor == color.White {
-		RenderBoardForWhite(curBoard, false)
-	} else if curColor == color.Black {
-		RenderBoardForBlack(curBoard)
+func RenderBoard(figureColor color.Color, board *board.Board) {
+	if figureColor == color.White {
+		RenderBoardForWhite(board)
+	} else if figureColor == color.Black {
+		RenderBoardForBlack(board)
+	}
+}
+
+func RenderBoardWithAvailablePieceMoves(figureColor color.Color, board *board.Board, figure piece.Piece) {
+	if figureColor == color.White {
+		RenderBoardForWhiteWithAvailablePieceMoves(board, figure)
+	} else if figureColor == color.Black {
+		RenderBoardForBlackWithAvailablePieceMoves(board, figure)
+	}
+}
+
+func RenderBoardForWhiteWithAvailablePieceMoves(gameBoard *board.Board, figure piece.Piece) {
+	availableMoves := gameBoard.AvailableMoves(figure)
+	for f := coords.File(8); f >= 1; f-- {
+		line := ""
+		for r := coords.A; r <= coords.H; r++ {
+			coordinates := coords.NewCoordinates(r, f)
+			var isHighlight bool
+			if _, ok := availableMoves[coordinates]; ok {
+				isHighlight = true
+			}
+			if gameBoard.IsSquareEmpty(coordinates) {
+				line += GetSpriteForEmptySquare(coordinates, isHighlight)
+			} else {
+				curPiece, ok := gameBoard.GetPiece(coordinates)
+				if ok {
+					line += GetPieceSprite(curPiece, isHighlight)
+				}
+			}
+		}
+		fmt.Println(line)
+	}
+
+}
+
+func RenderBoardForBlackWithAvailablePieceMoves(gameBoard *board.Board, figure piece.Piece) {
+	availableMoves := gameBoard.AvailableMoves(figure)
+	for f := coords.File(1); f <= 8; f++ {
+		line := ""
+		for r := coords.H; r >= coords.A; r-- {
+			coordinates := coords.NewCoordinates(r, f)
+			var isHighlight bool
+			if _, ok := availableMoves[coordinates]; ok {
+				isHighlight = true
+			}
+			if gameBoard.IsSquareEmpty(coordinates) {
+				line += GetSpriteForEmptySquare(coordinates, isHighlight)
+			} else {
+				curPiece, ok := gameBoard.GetPiece(coordinates)
+				if ok {
+					line += GetPieceSprite(curPiece, isHighlight)
+				}
+			}
+		}
+		fmt.Println(line)
 	}
 }

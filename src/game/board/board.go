@@ -19,8 +19,8 @@ func (b *Board) SetPiece(coordinates coords.Coordinates, piece piece.Piece) {
 }
 
 func (b *Board) GetPiece(coordinates coords.Coordinates) (piece.Piece, bool) {
-	curPiece, ok := b.Pieces[coordinates]
-	return curPiece, ok
+	figure, ok := b.Pieces[coordinates]
+	return figure, ok
 }
 
 func (b *Board) RemovePiece(coordinates coords.Coordinates) {
@@ -28,9 +28,9 @@ func (b *Board) RemovePiece(coordinates coords.Coordinates) {
 }
 
 func (b *Board) MovePiece(from, to coords.Coordinates) {
-	curPiece, _ := b.GetPiece(from)
+	figure, _ := b.GetPiece(from)
 	b.RemovePiece(from)
-	b.SetPiece(to, curPiece)
+	b.SetPiece(to, figure)
 }
 
 func (b *Board) IsSquareDark(coordinates coords.Coordinates) bool {

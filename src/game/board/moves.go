@@ -37,13 +37,13 @@ func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, curPiec
 	return true
 }
 
-func (b *Board) AvailableMoves(curPiece piece.Piece) map[coords.Coordinates]bool {
+func (b *Board) AvailableMoves(figure piece.Piece) map[coords.Coordinates]bool {
 	availableMoves := map[coords.Coordinates]bool{}
-	shifts := curPiece.Shifts()
+	shifts := figure.Shifts()
 	for shift, _ := range shifts {
-		if curPiece.Coordinates().CanShift(shift) {
-			newCoordinates := curPiece.Coordinates().Shift(shift)
-			if b.IsSquareAvailableForMove(newCoordinates, curPiece) {
+		if figure.Coordinates().CanShift(shift) {
+			newCoordinates := figure.Coordinates().Shift(shift)
+			if b.IsSquareAvailableForMove(newCoordinates, figure) {
 				availableMoves[newCoordinates] = true
 			}
 		}
