@@ -52,12 +52,12 @@ func (b *Board) SquaresBetween(from, to coords.Coordinates) []coords.Coordinates
 				coordinates = append(coordinates, newCoords)
 			}
 		} else if from.Rank > to.Rank && from.File < to.File {
-			for r, f := from.Rank+1, from.File+1; r >= to.Rank && f <= to.File; r, f = r-1, f+1 {
+			for r, f := from.Rank-1, from.File+1; r >= to.Rank && f <= to.File; r, f = r-1, f+1 {
 				newCoords := coords.NewCoordinates(r, f)
 				coordinates = append(coordinates, newCoords)
 			}
 		} else if from.Rank < to.Rank && from.File > to.File {
-			for r, f := from.Rank+1, from.File+1; r <= to.Rank && f >= to.File; r, f = r+1, f-1 {
+			for r, f := from.Rank+1, from.File-1; r <= to.Rank && f >= to.File; r, f = r+1, f-1 {
 				newCoords := coords.NewCoordinates(r, f)
 				coordinates = append(coordinates, newCoords)
 			}
