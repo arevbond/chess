@@ -14,27 +14,95 @@ func (b *Board) IsSquareAvailableForMoveSimple(coordinates coords.Coordinates, c
 	return curPiece.Color() != otherPiece.Color() && otherPiece.Name() != "King"
 }
 
-func (b *Board) CheckPieceOnWay(from, to coords.Coordinates) bool {
-	// TODO: завершить функцию проверки фигур на пути
+func (b *Board) SquaresBetween(from, to coords.Coordinates) []coords.Coordinates {
+	coordinates := make([]coords.Coordinates, 0)
+	if from.Rank == to.Rank { // ход по вертикали
+		if from.File > to.File {
+			for f := from.File - 1; f >= to.File; f-- {
+				newCoords := coords.NewCoordinates(from.Rank, f)
+				coordinates = append(coordinates, newCoords)
+			}
+		} else {
+			for f := from.File + 1; f <= to.File; f++ {
+				newCoords := coords.NewCoordinates(from.Rank, f)
+				coordinates = append(coordinates, newCoords)
+			}
+		}
+	} else if from.File == to.File { // ход по горизонтали
+		if from.Rank > to.Rank {
+			for r := from.Rank - 1; r >= to.Rank; r-- {
+				newCoords := coords.NewCoordinates(r, from.File)
+				coordinates = append(coordinates, newCoords)
+			}
+		} else {
+			for r := from.Rank + 1; r <= to.Rank; r++ {
+				newCoords := coords.NewCoordinates(r, from.File)
+				coordinates = append(coordinates, newCoords)
+			}
+		}
+	} else { // ход по диагонали
+		if from.Rank > to.Rank && from.File > to.File {
+			for r, f := from.Rank-1, from.File-1; r >= to.Rank && f >= to.File; r, f = r-1, f-1 {
+				newCoords := coords.NewCoordinates(r, f)
+				coordinates = append(coordinates, newCoords)
+			}
+		} else if from.Rank < to.Rank && from.File < to.File {
+			for r, f := from.Rank+1, from.File+1; r <= to.Rank && f <= to.File; r, f = r+1, f+1 {
+				newCoords := coords.NewCoordinates(r, f)
+				coordinates = append(coordinates, newCoords)
+			}
+		} else if from.Rank > to.Rank && from.File < to.File {
+			for r, f := from.Rank+1, from.File+1; r >= to.Rank && f <= to.File; r, f = r-1, f+1 {
+				newCoords := coords.NewCoordinates(r, f)
+				coordinates = append(coordinates, newCoords)
+			}
+		} else if from.Rank < to.Rank && from.File > to.File {
+			for r, f := from.Rank+1, from.File+1; r <= to.Rank && f >= to.File; r, f = r+1, f-1 {
+				newCoords := coords.NewCoordinates(r, f)
+				coordinates = append(coordinates, newCoords)
+			}
+		}
+	}
+	return coordinates
+}
+
+func (b *Board) HasPieceOnWay(from, to coords.Coordinates) bool {
+	var flag bool
+	coordsBetween := b.SquaresBetween(from, to)
+	ourPiece, _ := b.GetPiece(from)
+	ourPieceColor := ourPiece.Color()
+	for _, coordinates := range coordsBetween {
+		if otherPiece, ok := b.GetPiece(coordinates); ok {
+			otherPieceColor := otherPiece.Color()
+			if flag || otherPiece.Name() == "King" || otherPieceColor == ourPieceColor {
+				return true
+			} else {
+				flag = true
+			}
+
+		}
+	}
 	return false
 }
 
-func (b *Board) HasPieceOnWay(coordinatesToMove coords.Coordinates, curPiece piece.Piece) bool {
-	// проверка на то, чтобы на пути фигуры не было других фигур
-	// то есть чтобы фигура не перепрыгивала через другие фигуры
-	if curPiece.Name() == "Knight" {
-		return false
-	}
-	curCoords := curPiece.Coordinates()
-	return b.CheckPieceOnWay(curCoords, coordinatesToMove)
-}
+//func (b *Board) CoordsWithPieceOnWay(coordinatesToMove coords.Coordinates, figure piece.Piece) bool {
+//	// проверка на то, чтобы на пути фигуры не было других фигур
+//	// то есть чтобы фигура не перепрыгивала через другие фигуры
+//	if figure.Name() == "Knight" {
+//		return false
+//	}
+//	figureCoords := figure.Coordinates()
+//
+//
+//	return  b.CheckPieceOnWay(figureCoords, coordinatesToMove)
+//}
 
-func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, curPiece piece.Piece) bool {
-	if !b.IsSquareAvailableForMoveSimple(coordinates, curPiece) {
+func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, figure piece.Piece) bool {
+	if !b.IsSquareAvailableForMoveSimple(coordinates, figure) {
 		return false
 	}
-	//if b.HasPieceOnWay()
-	return true
+	figureCoords := figure.Coordinates()
+	return !b.HasPieceOnWay(figureCoords, coordinates)
 }
 
 func (b *Board) AvailableMoves(figure piece.Piece) map[coords.Coordinates]bool {
