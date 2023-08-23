@@ -287,12 +287,19 @@ func TestBoard_IsSquareAvailableForMoveSimple(t *testing.T) {
 //}
 
 func TestBoard_AvailableMoves(t *testing.T) {
+	// TODO: add for king and pawn
+	var fen string
+	var gameBoard *Board
+	var availableMoves map[coords.Coordinates]bool
+	var legalMoves []coords.Coordinates
+
 	// check available moves for queen
-	fen := "3k4/6p1/3B1p2/2N5/1r1Q1N2/8/1N3P2/3K4 w - - 0 1"
-	gameBoard := BoardFromFen(fen) // queen on d4
+	// white queen
+	fen = "3k4/6p1/3B1p2/2N5/1r1Q1N2/8/1N3P2/3K4 w - - 0 1"
+	gameBoard = BoardFromFen(fen) // queen on d4
 	queen, _ := gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves := gameBoard.AvailableMoves(queen)
-	legalMoves := []coords.Coordinates{
+	availableMoves = gameBoard.AvailableMoves(queen)
+	legalMoves = []coords.Coordinates{
 		{coords.B, coords.File(4)},
 		{coords.C, coords.File(4)},
 		{coords.C, coords.File(3)},
@@ -310,6 +317,183 @@ func TestBoard_AvailableMoves(t *testing.T) {
 	for _, coordinates := range legalMoves {
 		if _, ok := availableMoves[coordinates]; !ok {
 			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", queen.Name(), coordinates.Rank,
+				coordinates.File, fen)
+
+		}
+	}
+	// black queen
+	fen = "3p4/8/5n2/2p5/2pq2N1/2R5/5P2/8 w - - 0 1"
+	gameBoard = BoardFromFen(fen) // queen on d4
+	queen, _ = gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
+	availableMoves = gameBoard.AvailableMoves(queen)
+	legalMoves = []coords.Coordinates{
+		{coords.C, coords.File(3)},
+		{coords.D, coords.File(7)},
+		{coords.D, coords.File(6)},
+		{coords.D, coords.File(5)},
+		{coords.D, coords.File(3)},
+		{coords.D, coords.File(2)},
+		{coords.D, coords.File(1)},
+		{coords.E, coords.File(3)},
+		{coords.E, coords.File(4)},
+		{coords.E, coords.File(5)},
+		{coords.F, coords.File(2)},
+		{coords.F, coords.File(4)},
+		{coords.G, coords.File(4)},
+	}
+	if len(legalMoves) != len(availableMoves) {
+		t.Errorf("len available moves don't match len legal moves")
+	}
+	for _, coordinates := range legalMoves {
+		if _, ok := availableMoves[coordinates]; !ok {
+			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", queen.Name(), coordinates.Rank,
+				coordinates.File, fen)
+
+		}
+	}
+
+	// check available moves for knight
+	// white knight
+	fen = "8/8/4n3/1N3p2/3N4/8/2Q5/8 w - - 0 1"
+	gameBoard = BoardFromFen(fen) // knight on d4
+	knight, _ := gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
+	availableMoves = gameBoard.AvailableMoves(knight)
+	legalMoves = []coords.Coordinates{
+		{coords.B, coords.File(3)},
+		{coords.C, coords.File(6)},
+		{coords.E, coords.File(6)},
+		{coords.E, coords.File(2)},
+		{coords.F, coords.File(3)},
+		{coords.F, coords.File(5)},
+	}
+	if len(legalMoves) != len(availableMoves) {
+		t.Errorf("len available moves don't match len legal moves")
+	}
+	for _, coordinates := range legalMoves {
+		if _, ok := availableMoves[coordinates]; !ok {
+			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", knight.Name(), coordinates.Rank,
+				coordinates.File, fen)
+
+		}
+	}
+	// black knight
+	fen = "8/8/4p3/1N3p2/3n4/8/2Q1N3/8 w - - 0 1"
+	gameBoard = BoardFromFen(fen) // knight on d4
+	knight, _ = gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
+	availableMoves = gameBoard.AvailableMoves(knight)
+	legalMoves = []coords.Coordinates{
+		{coords.B, coords.File(3)},
+		{coords.B, coords.File(5)},
+		{coords.C, coords.File(2)},
+		{coords.C, coords.File(6)},
+		{coords.E, coords.File(2)},
+		{coords.F, coords.File(3)},
+	}
+	if len(legalMoves) != len(availableMoves) {
+		t.Errorf("len available moves don't match len legal moves")
+	}
+	for _, coordinates := range legalMoves {
+		if _, ok := availableMoves[coordinates]; !ok {
+			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", knight.Name(), coordinates.Rank,
+				coordinates.File, fen)
+
+		}
+	}
+	// check available moves for bishop
+	// white bishop
+	fen = "8/8/5n2/8/3B4/2N5/5N2/8 w - - 0 1"
+	gameBoard = BoardFromFen(fen) // bishop on d4
+	bishop, _ := gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
+	availableMoves = gameBoard.AvailableMoves(bishop)
+	legalMoves = []coords.Coordinates{
+		{coords.A, coords.File(7)},
+		{coords.B, coords.File(6)},
+		{coords.C, coords.File(5)},
+		{coords.E, coords.File(3)},
+		{coords.E, coords.File(5)},
+		{coords.F, coords.File(6)},
+	}
+	if len(legalMoves) != len(availableMoves) {
+		t.Errorf("len available moves don't match len legal moves")
+	}
+	for _, coordinates := range legalMoves {
+		if _, ok := availableMoves[coordinates]; !ok {
+			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", bishop.Name(), coordinates.Rank,
+				coordinates.File, fen)
+
+		}
+	}
+	// black bishop
+	fen = "8/8/5n2/8/3b4/2N5/5N2/8 w - - 0 1"
+	gameBoard = BoardFromFen(fen) // bishop on d4
+	bishop, _ = gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
+	availableMoves = gameBoard.AvailableMoves(bishop)
+	legalMoves = []coords.Coordinates{
+		{coords.A, coords.File(7)},
+		{coords.B, coords.File(6)},
+		{coords.C, coords.File(5)},
+		{coords.C, coords.File(3)},
+		{coords.E, coords.File(5)},
+		{coords.E, coords.File(3)},
+		{coords.F, coords.File(2)},
+	}
+	if len(legalMoves) != len(availableMoves) {
+		t.Errorf("len available moves don't match len legal moves")
+	}
+	for _, coordinates := range legalMoves {
+		if _, ok := availableMoves[coordinates]; !ok {
+			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", bishop.Name(), coordinates.Rank,
+				coordinates.File, fen)
+
+		}
+	}
+
+	// check available moves for rock
+	// white rock
+	fen = "8/3r4/8/8/1N1Rn3/8/8/8 w - - 0 1"
+	gameBoard = BoardFromFen(fen) // rock on d4
+	rock, _ := gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
+	availableMoves = gameBoard.AvailableMoves(rock)
+	legalMoves = []coords.Coordinates{
+		{coords.C, coords.File(4)},
+		{coords.D, coords.File(5)},
+		{coords.D, coords.File(6)},
+		{coords.D, coords.File(7)},
+		{coords.D, coords.File(3)},
+		{coords.D, coords.File(2)},
+		{coords.D, coords.File(1)},
+		{coords.E, coords.File(4)},
+	}
+	if len(legalMoves) != len(availableMoves) {
+		t.Errorf("len available moves don't match len legal moves")
+	}
+	for _, coordinates := range legalMoves {
+		if _, ok := availableMoves[coordinates]; !ok {
+			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", rock.Name(), coordinates.Rank,
+				coordinates.File, fen)
+
+		}
+	} // black rock
+	fen = "8/3r4/8/8/1N1r2n1/8/3R4/8 w - - 0 1"
+	gameBoard = BoardFromFen(fen) // rock on d4
+	rock, _ = gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
+	availableMoves = gameBoard.AvailableMoves(rock)
+	legalMoves = []coords.Coordinates{
+		{coords.B, coords.File(4)},
+		{coords.C, coords.File(4)},
+		{coords.D, coords.File(5)},
+		{coords.D, coords.File(6)},
+		{coords.D, coords.File(3)},
+		{coords.D, coords.File(2)},
+		{coords.E, coords.File(4)},
+		{coords.F, coords.File(4)},
+	}
+	if len(legalMoves) != len(availableMoves) {
+		t.Errorf("len available moves don't match len legal moves")
+	}
+	for _, coordinates := range legalMoves {
+		if _, ok := availableMoves[coordinates]; !ok {
+			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", rock.Name(), coordinates.Rank,
 				coordinates.File, fen)
 
 		}

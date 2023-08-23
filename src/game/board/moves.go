@@ -91,18 +91,6 @@ func (b *Board) HasPieceOnWay(from, to coords.Coordinates) bool {
 	return false
 }
 
-//func (b *Board) CoordsWithPieceOnWay(coordinatesToMove coords.Coordinates, figure piece.Piece) bool {
-//	// проверка на то, чтобы на пути фигуры не было других фигур
-//	// то есть чтобы фигура не перепрыгивала через другие фигуры
-//	if figure.Name() == "Knight" {
-//		return false
-//	}
-//	figureCoords := figure.Coordinates()
-//
-//
-//	return  b.CheckPieceOnWay(figureCoords, coordinatesToMove)
-//}
-
 func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, figure piece.Piece) bool {
 	if !b.IsSquareAvailableForMoveSimple(coordinates, figure) {
 		return false
@@ -112,7 +100,7 @@ func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, figure 
 }
 
 func (b *Board) AvailableMoves(figure piece.Piece) map[coords.Coordinates]bool {
-	// не реализовано для короля и пешки
+	// TODO: add for pawn and king
 	availableMoves := map[coords.Coordinates]bool{}
 	shifts := figure.Shifts()
 	for shift, _ := range shifts {
