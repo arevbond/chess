@@ -285,3 +285,33 @@ func TestBoard_IsSquareAvailableForMoveSimple(t *testing.T) {
 //func TestBoard_SetupPositionFromFEN(t *testing.T) {
 //
 //}
+
+func TestBoard_AvailableMoves(t *testing.T) {
+	// check available moves for queen
+	fen := "3k4/6p1/3B1p2/2N5/1r1Q1N2/8/1N3P2/3K4 w - - 0 1"
+	gameBoard := BoardFromFen(fen) // queen on d4
+	queen, _ := gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
+	availableMoves := gameBoard.AvailableMoves(queen)
+	legalMoves := []coords.Coordinates{
+		{coords.B, coords.File(4)},
+		{coords.C, coords.File(4)},
+		{coords.C, coords.File(3)},
+		{coords.E, coords.File(4)},
+		{coords.D, coords.File(5)},
+		{coords.D, coords.File(3)},
+		{coords.D, coords.File(2)},
+		{coords.E, coords.File(5)},
+		{coords.E, coords.File(3)},
+		{coords.F, coords.File(6)},
+	}
+	if len(legalMoves) != len(availableMoves) {
+		t.Errorf("len available moves don't match len legal moves")
+	}
+	for _, coordinates := range legalMoves {
+		if _, ok := availableMoves[coordinates]; !ok {
+			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", queen.Name(), coordinates.Rank,
+				coordinates.File, fen)
+
+		}
+	}
+}

@@ -79,8 +79,14 @@ func (b *Board) HasPieceOnWay(from, to coords.Coordinates) bool {
 			} else {
 				flag = true
 			}
-
 		}
+	}
+	if flag == true {
+		pieceInTo, ok := b.GetPiece(to)
+		if ok {
+			return ourPieceColor == pieceInTo.Color()
+		}
+		return true
 	}
 	return false
 }
@@ -106,6 +112,7 @@ func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, figure 
 }
 
 func (b *Board) AvailableMoves(figure piece.Piece) map[coords.Coordinates]bool {
+	// не реализовано для короля и пешки
 	availableMoves := map[coords.Coordinates]bool{}
 	shifts := figure.Shifts()
 	for shift, _ := range shifts {
