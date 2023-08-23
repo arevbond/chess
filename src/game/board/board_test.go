@@ -282,9 +282,94 @@ func TestBoard_IsSquareAvailableForMoveSimple(t *testing.T) {
 	}
 }
 
-//func TestBoard_SetupPositionFromFEN(t *testing.T) {
-//
-//}
+func TestBoard_PieceFromFenChar(t *testing.T) {
+	coordinates := coords.NewCoordinates(coords.A, 8)
+	var tests = []struct {
+		symbol    rune
+		wantPiece string
+		wantColor color.Color
+	}{
+		{'K', "King", color.White},
+		{'k', "King", color.Black},
+		{'q', "Queen", color.Black},
+		{'Q', "Queen", color.White},
+		{'p', "Pawn", color.Black},
+		{'P', "Pawn", color.White},
+		{'n', "Knight", color.Black},
+		{'N', "Knight", color.White},
+		{'B', "Bishop", color.White},
+		{'b', "Bishop", color.Black},
+		{'r', "Rock", color.Black},
+		{'R', "Rock", color.White},
+	}
+
+	for _, tt := range tests {
+		figure := PieceFromFenChar(tt.symbol, coordinates)
+		if figure.Name() != tt.wantPiece || figure.Color() != tt.wantColor || figure.Coordinates() != coordinates {
+			t.Errorf("want: %s color: %d coords: %q%d - have: %s color: %d coords: %q%d", tt.wantPiece, tt.wantColor,
+				coordinates.Rank, coordinates.File, figure.Name(), figure.Color(), figure.Coordinates().Rank, figure.Coordinates().File)
+		}
+	}
+}
+
+func TestBoard_SetupPositionFromFEN(t *testing.T) {
+	startPositionFen := "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+	gameBoard := NewBoard()
+	gameBoard.SetupPositionFromFEN(startPositionFen)
+
+	var tests = []struct {
+		coordinates coords.Coordinates
+		figureName  string
+		figureColor color.Color
+	}{
+		{coords.NewCoordinates(coords.A, coords.File(8)), "Rock", color.Black},
+		{coords.NewCoordinates(coords.H, coords.File(8)), "Rock", color.Black},
+		{coords.NewCoordinates(coords.A, coords.File(1)), "Rock", color.White},
+		{coords.NewCoordinates(coords.H, coords.File(1)), "Rock", color.White},
+
+		{coords.NewCoordinates(coords.A, coords.File(2)), "Pawn", color.White},
+		{coords.NewCoordinates(coords.B, coords.File(2)), "Pawn", color.White},
+		{coords.NewCoordinates(coords.C, coords.File(2)), "Pawn", color.White},
+		{coords.NewCoordinates(coords.D, coords.File(2)), "Pawn", color.White},
+		{coords.NewCoordinates(coords.E, coords.File(2)), "Pawn", color.White},
+		{coords.NewCoordinates(coords.F, coords.File(2)), "Pawn", color.White},
+		{coords.NewCoordinates(coords.G, coords.File(2)), "Pawn", color.White},
+		{coords.NewCoordinates(coords.H, coords.File(2)), "Pawn", color.White},
+		{coords.NewCoordinates(coords.A, coords.File(7)), "Pawn", color.Black},
+		{coords.NewCoordinates(coords.B, coords.File(7)), "Pawn", color.Black},
+		{coords.NewCoordinates(coords.C, coords.File(7)), "Pawn", color.Black},
+		{coords.NewCoordinates(coords.D, coords.File(7)), "Pawn", color.Black},
+		{coords.NewCoordinates(coords.E, coords.File(7)), "Pawn", color.Black},
+		{coords.NewCoordinates(coords.F, coords.File(7)), "Pawn", color.Black},
+		{coords.NewCoordinates(coords.G, coords.File(7)), "Pawn", color.Black},
+		{coords.NewCoordinates(coords.H, coords.File(7)), "Pawn", color.Black},
+
+		{coords.NewCoordinates(coords.B, coords.File(8)), "Knight", color.Black},
+		{coords.NewCoordinates(coords.G, coords.File(8)), "Knight", color.Black},
+		{coords.NewCoordinates(coords.B, coords.File(1)), "Knight", color.White},
+		{coords.NewCoordinates(coords.G, coords.File(1)), "Knight", color.White},
+
+		{coords.NewCoordinates(coords.C, coords.File(8)), "Bishop", color.Black},
+		{coords.NewCoordinates(coords.F, coords.File(8)), "Bishop", color.Black},
+		{coords.NewCoordinates(coords.C, coords.File(1)), "Bishop", color.White},
+		{coords.NewCoordinates(coords.F, coords.File(1)), "Bishop", color.White},
+
+		{coords.NewCoordinates(coords.D, coords.File(8)), "Queen", color.Black},
+		{coords.NewCoordinates(coords.D, coords.File(1)), "Queen", color.White},
+
+		{coords.NewCoordinates(coords.E, coords.File(8)), "King", color.Black},
+		{coords.NewCoordinates(coords.E, coords.File(1)), "King", color.White},
+	}
+	for _, tt := range tests {
+		figure, ok := gameBoard.GetPiece(tt.coordinates)
+		if !ok {
+			t.Errorf("Piece %s not on board", tt.figureName)
+		}
+		if tt.figureName != figure.Name() || tt.figureColor != figure.Color() {
+			t.Errorf("want: %s %d - have: %s %d", tt.figureName, tt.figureColor, figure.Name(), figure.Color())
+		}
+	}
+}
 
 func TestBoard_AvailableMoves(t *testing.T) {
 	// TODO: add for king and pawn

@@ -37,32 +37,32 @@ func (b *Board) SetupPositionFromFEN(fen string) {
 }
 
 func PieceFromFenChar(symbol rune, coordinates coords.Coordinates) piece.Piece {
-	var curPiece piece.Piece
-	var curColor color.Color
+	var figure piece.Piece
+	var figureColor color.Color
 
-	curColor = color.White
+	figureColor = color.White
 	if unicode.IsLower(symbol) {
-		curColor = color.Black
+		figureColor = color.Black
 	}
 	symbol = unicode.ToUpper(symbol)
 
 	switch symbol {
 	case 'R':
-		curPiece = piece.NewRock(curColor, coordinates)
+		figure = piece.NewRock(figureColor, coordinates)
 	case 'N':
-		curPiece = piece.NewKnight(curColor, coordinates)
+		figure = piece.NewKnight(figureColor, coordinates)
 	case 'B':
-		curPiece = piece.NewBishop(curColor, coordinates)
+		figure = piece.NewBishop(figureColor, coordinates)
 	case 'Q':
-		curPiece = piece.NewQueen(curColor, coordinates)
+		figure = piece.NewQueen(figureColor, coordinates)
 	case 'K':
-		curPiece = piece.NewKing(curColor, coordinates)
+		figure = piece.NewKing(figureColor, coordinates)
 	case 'P':
-		curPiece = piece.NewPawn(curColor, coordinates)
+		figure = piece.NewPawn(figureColor, coordinates)
 	default:
 		log.Fatalf("Unknow fen symbol for piece - %q", symbol)
 	}
-	return curPiece
+	return figure
 }
 
 func (b *Board) SetupDefaultPiecesPositions() {
