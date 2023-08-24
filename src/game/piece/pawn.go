@@ -35,5 +35,16 @@ func (p *Pawn) SetColor(color color.Color) {
 }
 
 func (p *Pawn) Shifts() map[coords.CoordinatesShift]bool {
-	return nil
+	shifts := make([][]int, 0)
+	if p.Color() == color.White {
+		shifts = [][]int{
+			{0, 1}, {0, 2}, {-1, 1}, {1, 1},
+		}
+	} else if p.Color() == color.Black {
+		shifts = [][]int{
+			{0, -1}, {0, -2}, {-1, -1}, {1, -1},
+		}
+	}
+	coordsShifts := coords.CalculateCoordinatesShift(shifts, p.Coordinates())
+	return coordsShifts
 }
