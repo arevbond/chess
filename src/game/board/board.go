@@ -1,6 +1,7 @@
 package board
 
 import (
+	"chess/src/game/color"
 	"chess/src/game/coords"
 	"chess/src/game/piece"
 )
@@ -21,6 +22,16 @@ func (b *Board) SetPiece(coordinates coords.Coordinates, piece piece.Piece) {
 func (b *Board) GetPiece(coordinates coords.Coordinates) (piece.Piece, bool) {
 	figure, ok := b.Pieces[coordinates]
 	return figure, ok
+}
+
+func (b *Board) PiecesByColor(figureColor color.Color) []piece.Piece {
+	pieces := make([]piece.Piece, 0)
+	for _, figure := range b.Pieces {
+		if figure.Color() == figureColor {
+			pieces = append(pieces, figure)
+		}
+	}
+	return pieces
 }
 
 func (b *Board) RemovePiece(coordinates coords.Coordinates) {

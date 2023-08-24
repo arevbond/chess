@@ -35,5 +35,11 @@ func (k *King) SetColor(color color.Color) {
 }
 
 func (k *King) Shifts() map[coords.CoordinatesShift]bool {
-	return nil
+	shifts := [][]int{
+		{-1, 1}, {0, 1}, {1, 1},
+		{-1, 0}, {1, 1}, {1, 0},
+		{-1, -1}, {0, -1}, {1, -1},
+	}
+	coordsShifts := coords.CalculateCoordinatesShift(shifts, k.Coordinates())
+	return coordsShifts
 }

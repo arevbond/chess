@@ -42,6 +42,8 @@ func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, figure 
 		ans = b.IsSquareAvailableForMoveLongRangePiece(coordinates, figure)
 	case "Pawn":
 		ans = b.IsSquareAvailableForMovePawn(coordinates, figure)
+	case "King":
+		ans = b.IsSquareAvailableForMoveKing(coordinates, figure)
 	}
 	return ans
 }
@@ -70,6 +72,11 @@ func (b *Board) IsSquareAvailableForMovePawn(coordinates coords.Coordinates, fig
 		}
 	}
 	return result
+}
+
+func (b *Board) IsSquareAvailableForMoveKing(coordinates coords.Coordinates, figure piece.Piece) bool {
+	//figureCoords := figure.Coordinates()
+	return !b.IsSquareAttackedByColor(coordinates, color.Opposite(figure.Color()))
 }
 
 func (b *Board) IsSquareAvailableForMoveLongRangePiece(coordinates coords.Coordinates, figure piece.Piece) bool {
