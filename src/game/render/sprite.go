@@ -6,6 +6,10 @@ import (
 	"chess/src/game/piece"
 )
 
+const (
+	Circle string = " ● "
+)
+
 func GetSpriteForEmptySquare(coordinates coords.Coordinates, isHighLighted bool) string {
 	return ColorizeSprite("   ", color.White, IsSquareDark(coordinates), isHighLighted)
 }
@@ -17,15 +21,16 @@ func IsSquareDark(coordinate coords.Coordinates) bool {
 func ColorizeSprite(sprite string, pieceColor color.Color, isSquareDark bool, isHighLighted bool) string {
 	var pColor, backgroundColor string
 
-	if pieceColor == color.White {
+	if isHighLighted {
+		sprite = Circle
+		pColor = AnsiGreenColor
+	} else if pieceColor == color.White {
 		pColor = AnsiWhitePieceColor
 	} else {
 		pColor = AnsiBlackPieceColor
 	}
 
-	if isHighLighted {
-		backgroundColor = AnsiHighlightedSquareBackground
-	} else if isSquareDark {
+	if isSquareDark {
 		backgroundColor = AnsiBlackSquareBackground
 	} else {
 		backgroundColor = AnsiWhiteSquareBackground

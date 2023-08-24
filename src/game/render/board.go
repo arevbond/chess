@@ -13,6 +13,7 @@ const (
 
 	AnsiWhitePieceColor string = "\u001B[97m"
 	AnsiBlackPieceColor string = "\u001B[30m"
+	AnsiGreenColor      string = "\u001B[92m"
 
 	AnsiWhiteSquareBackground       string = "\u001B[47m"
 	AnsiBlackSquareBackground       string = "\u001B[0;100m"
