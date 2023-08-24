@@ -6,6 +6,15 @@ import (
 	"chess/src/game/piece"
 )
 
+func (b *Board) IsSquareDark(coordinates coords.Coordinates) bool {
+	return (int(coordinates.File)+int(coordinates.Rank))%2 == 0
+}
+
+func (b *Board) IsSquareEmpty(coordinates coords.Coordinates) bool {
+	_, ok := b.GetPiece(coordinates)
+	return !ok
+}
+
 func (b *Board) AttackedSquaresByPiece(figure piece.Piece) map[coords.Coordinates]bool {
 	attackedSquares := make(map[coords.Coordinates]bool)
 	switch figure.Name() {
