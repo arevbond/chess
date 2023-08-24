@@ -371,12 +371,105 @@ func TestBoard_SetupPositionFromFEN(t *testing.T) {
 	}
 }
 
-func TestBoard_AvailableMoves(t *testing.T) {
-	// TODO: add for king
+func TestBoard_KingAvailableMoves(t *testing.T) {
+	var gameBoard *Board
+	var availableMoves map[coords.Coordinates]bool
+
+	// check available moves for king
+	// white king
+	var tests3 = []struct {
+		fen           string
+		kingCoords    coords.Coordinates
+		lenLegalMoves int
+		legalMoves    []coords.Coordinates
+	}{
+		{"3r4/8/8/r3B3/4K3/8/4k3/8 w - - 0 1",
+			coords.NewCoordinates(coords.E, coords.File(4)),
+			2,
+			[]coords.Coordinates{
+				{coords.F, coords.File(4)}, {coords.F, coords.File(5)},
+			}},
+		{"8/8/8/8/4K3/8/8/8 w - - 0 1",
+			coords.NewCoordinates(coords.E, coords.File(4)),
+			8,
+			[]coords.Coordinates{
+				{coords.F, coords.File(4)},
+				{coords.F, coords.File(5)},
+				{coords.F, coords.File(3)},
+				{coords.E, coords.File(3)},
+				{coords.D, coords.File(3)},
+				{coords.D, coords.File(4)},
+				{coords.D, coords.File(5)},
+				{coords.E, coords.File(5)},
+			}},
+	}
+	for _, tt := range tests3 {
+		gameBoard = BoardFromFen(tt.fen)
+		king, ok := gameBoard.GetPiece(tt.kingCoords)
+		if !ok {
+			t.Errorf("invalid king coords: %q%d", tt.kingCoords.Rank, tt.kingCoords.File)
+		}
+		availableMoves = gameBoard.AvailableMoves(king)
+		if tt.lenLegalMoves != len(availableMoves) {
+			t.Errorf("want len legal moves: %d - have len legal moves: %d", tt.lenLegalMoves, len(availableMoves))
+		}
+		for _, coordinates := range tt.legalMoves {
+			if _, ok3 := availableMoves[coordinates]; !ok3 {
+				t.Errorf("move piece %q from %q%d to %q%d should be legal\nCurrent fen: %s", king.Name(), king.Coordinates().Rank,
+					king.Coordinates().File, coordinates.Rank, coordinates.File, tt.fen)
+			}
+		}
+	}
+	// black king
+	var tests = []struct {
+		fen           string
+		kingCoords    coords.Coordinates
+		lenLegalMoves int
+		legalMoves    []coords.Coordinates
+	}{
+		{"3R4/8/8/R3b3/4k3/8/4K3/8 w - - 0 1",
+			coords.NewCoordinates(coords.E, coords.File(4)),
+			2,
+			[]coords.Coordinates{
+				{coords.F, coords.File(4)}, {coords.F, coords.File(5)},
+			}},
+		{"8/8/8/8/4k3/8/8/8 w - - 0 1",
+			coords.NewCoordinates(coords.E, coords.File(4)),
+			8,
+			[]coords.Coordinates{
+				{coords.F, coords.File(4)},
+				{coords.F, coords.File(5)},
+				{coords.F, coords.File(3)},
+				{coords.E, coords.File(3)},
+				{coords.D, coords.File(3)},
+				{coords.D, coords.File(4)},
+				{coords.D, coords.File(5)},
+				{coords.E, coords.File(5)},
+			}},
+	}
+	for _, tt := range tests {
+		gameBoard = BoardFromFen(tt.fen)
+		king, ok := gameBoard.GetPiece(tt.kingCoords)
+		if !ok {
+			t.Errorf("invalid king coords: %q%d", tt.kingCoords.Rank, tt.kingCoords.File)
+		}
+		availableMoves = gameBoard.AvailableMoves(king)
+		if tt.lenLegalMoves != len(availableMoves) {
+			t.Errorf("want len legal moves: %d - have len legal moves: %d", tt.lenLegalMoves, len(availableMoves))
+		}
+		for _, coordinates := range tt.legalMoves {
+			if _, ok3 := availableMoves[coordinates]; !ok3 {
+				t.Errorf("move piece %q from %q%d to %q%d should be legal\nCurrent fen: %s", king.Name(), king.Coordinates().Rank,
+					king.Coordinates().File, coordinates.Rank, coordinates.File, tt.fen)
+			}
+		}
+	}
+}
+
+func TestBoard_PawnAvailableMoves(t *testing.T) {
 	var fen string
 	var gameBoard *Board
 	var availableMoves map[coords.Coordinates]bool
-	var legalMoves []coords.Coordinates
 
 	// check available moves for pawn
 	// white pawn
@@ -474,6 +567,13 @@ func TestBoard_AvailableMoves(t *testing.T) {
 			}
 		}
 	}
+}
+
+func TestBoard_QueenAvailableMoves(t *testing.T) {
+	var fen string
+	var gameBoard *Board
+	var availableMoves map[coords.Coordinates]bool
+	var legalMoves []coords.Coordinates
 
 	// check available moves for queen
 	// white queen
@@ -587,6 +687,13 @@ func TestBoard_AvailableMoves(t *testing.T) {
 
 		}
 	}
+}
+
+func TestBoard_KnightAvailableMoves(t *testing.T) {
+	var fen string
+	var gameBoard *Board
+	var availableMoves map[coords.Coordinates]bool
+	var legalMoves []coords.Coordinates
 
 	// check available moves for knight
 	// white knight
@@ -635,6 +742,14 @@ func TestBoard_AvailableMoves(t *testing.T) {
 
 		}
 	}
+}
+
+func TestBoard_BishopAvailableMoves(t *testing.T) {
+	var fen string
+	var gameBoard *Board
+	var availableMoves map[coords.Coordinates]bool
+	var legalMoves []coords.Coordinates
+
 	// check available moves for bishop
 	// white bishop
 	fen = "8/8/5n2/8/3B4/2N5/5N2/8 w - - 0 1"
@@ -683,6 +798,13 @@ func TestBoard_AvailableMoves(t *testing.T) {
 
 		}
 	}
+}
+
+func TestBoard_RockAvailableMoves(t *testing.T) {
+	var fen string
+	var gameBoard *Board
+	var availableMoves map[coords.Coordinates]bool
+	var legalMoves []coords.Coordinates
 
 	// check available moves for rock
 	// white rock
