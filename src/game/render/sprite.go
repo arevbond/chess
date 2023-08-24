@@ -20,8 +20,13 @@ func IsSquareDark(coordinate coords.Coordinates) bool {
 
 func ColorizeSprite(sprite string, pieceColor color.Color, isSquareDark bool, isHighLighted bool) string {
 	var pColor, backgroundColor string
+	var isHighlightedSquare bool
 
-	if isHighLighted {
+	if isHighLighted && sprite != "   " {
+		isHighlightedSquare = true
+	}
+
+	if isHighLighted && !isHighlightedSquare {
 		sprite = Circle
 		pColor = AnsiGreenColor
 	} else if pieceColor == color.White {
@@ -30,7 +35,9 @@ func ColorizeSprite(sprite string, pieceColor color.Color, isSquareDark bool, is
 		pColor = AnsiBlackPieceColor
 	}
 
-	if isSquareDark {
+	if isHighlightedSquare {
+		backgroundColor = AnsiHighlightedSquareBackground
+	} else if isSquareDark {
 		backgroundColor = AnsiBlackSquareBackground
 	} else {
 		backgroundColor = AnsiWhiteSquareBackground
