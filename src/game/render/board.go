@@ -46,9 +46,9 @@ func RenderBoardForBlack(gameBoard *board.Board) {
 			if gameBoard.IsSquareEmpty(coordinates) {
 				line += GetSpriteForEmptySquare(coordinates, false)
 			} else {
-				curPiece, ok := gameBoard.GetPiece(coordinates)
+				figure, ok := gameBoard.GetPiece(coordinates)
 				if ok {
-					line += GetPieceSprite(curPiece, false)
+					line += GetPieceSprite(figure, false)
 				}
 			}
 		}

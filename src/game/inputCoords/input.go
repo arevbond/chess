@@ -59,30 +59,30 @@ func InputPieceByColor(color color.Color, board *board.Board) (coords.Coordinate
 	for {
 		fmt.Println("Please choose your piece")
 		curCoords := InputCoordinates()
-		curPiece, ok := board.GetPiece(curCoords)
+		figure, ok := board.GetPiece(curCoords)
 		if !ok {
 			fmt.Println("Piece doesn't choose")
 			continue
 		}
-		if curPiece.Color() != color {
+		if figure.Color() != color {
 			continue
 		}
-		return curCoords, curPiece
+		return curCoords, figure
 	}
 }
 
 func InputCoordsOwnPieceCanMove(color color.Color, board *board.Board) (coords.Coordinates, piece.Piece) {
 	var curCoords coords.Coordinates
-	var curPiece piece.Piece
+	var figure piece.Piece
 	for {
-		curCoords, curPiece = InputPieceByColor(color, board)
-		if len(board.AvailableMoves(curPiece)) > 0 {
+		curCoords, figure = InputPieceByColor(color, board)
+		if len(board.AvailableMoves(figure)) > 0 {
 			break
 		} else {
 			fmt.Println("Your piece can't moves")
 		}
 	}
-	return curCoords, curPiece
+	return curCoords, figure
 }
 
 func InputCoordsYourPieceToMove(piece piece.Piece, board *board.Board) coords.Coordinates {

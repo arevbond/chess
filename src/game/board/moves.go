@@ -21,13 +21,13 @@ func (b *Board) AvailableMoves(figure piece.Piece) map[coords.Coordinates]bool {
 	return availableMoves
 }
 
-func (b *Board) IsSquareAvailableForMoveSimple(coordinates coords.Coordinates, curPiece piece.Piece) bool {
+func (b *Board) IsSquareAvailableForMoveSimple(coordinates coords.Coordinates, figure piece.Piece) bool {
 	// проверяет пустая ли клетка, если нет, стоит ли на ней вражеская фигура, кроме короля
 	if b.IsSquareEmpty(coordinates) {
 		return true
 	}
 	otherPiece, _ := b.GetPiece(coordinates)
-	return curPiece.Color() != otherPiece.Color() && otherPiece.Name() != "King"
+	return figure.Color() != otherPiece.Color() && otherPiece.Name() != "King"
 }
 
 func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, figure piece.Piece) bool {

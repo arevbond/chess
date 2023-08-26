@@ -84,7 +84,7 @@ func TestBoard_MovePiece(t *testing.T) {
 		queen := piece.NewQueen(color.White, tt.from)
 		board.SetPiece(tt.from, queen)
 		board.MovePiece(tt.from, tt.to)
-		if curPiece, ok := board.GetPiece(tt.to); !ok || curPiece != queen {
+		if figure, ok := board.GetPiece(tt.to); !ok || figure != queen {
 			t.Errorf("piece %s doen't move from %q%d to %q%d", queen.Name(), tt.from.Rank, tt.from.File,
 				tt.to.Rank, tt.to.File)
 		}

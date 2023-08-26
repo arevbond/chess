@@ -28,9 +28,9 @@ func (b *Board) SetupPositionFromFEN(fen string) {
 				rank += coords.Rank(digit)
 				continue
 			}
-			curCoords := coords.NewCoordinates(rank, file)
-			curPiece := PieceFromFenChar(symbol, curCoords)
-			b.SetPiece(curCoords, curPiece)
+			figureCoords := coords.NewCoordinates(rank, file)
+			figure := PieceFromFenChar(symbol, figureCoords)
+			b.SetPiece(figureCoords, figure)
 			rank++
 		}
 	}

@@ -7,7 +7,13 @@ import (
 )
 
 const (
-	Circle string = " ● "
+	Circle       string = " ● "
+	PawnSprite   string = " ♟ "
+	KnightSprite string = " ♞ "
+	BishopSprite string = " ♝ "
+	RockSprite   string = " ♜ "
+	QueenSprite  string = " ♛ "
+	KingSprite   string = " ♚ "
 )
 
 func GetSpriteForEmptySquare(coordinates coords.Coordinates, isHighLighted bool) string {
@@ -20,13 +26,13 @@ func IsSquareDark(coordinate coords.Coordinates) bool {
 
 func ColorizeSprite(sprite string, pieceColor color.Color, isSquareDark bool, isHighLighted bool) string {
 	var pColor, backgroundColor string
-	var isHighlightedSquare bool
+	var isHighlightedBgSquare bool
 
 	if isHighLighted && sprite != "   " {
-		isHighlightedSquare = true
+		isHighlightedBgSquare = true
 	}
 
-	if isHighLighted && !isHighlightedSquare {
+	if isHighLighted && !isHighlightedBgSquare {
 		sprite = Circle
 		pColor = AnsiGreenColor
 	} else if pieceColor == color.White {
@@ -35,7 +41,7 @@ func ColorizeSprite(sprite string, pieceColor color.Color, isSquareDark bool, is
 		pColor = AnsiBlackPieceColor
 	}
 
-	if isHighlightedSquare {
+	if isHighlightedBgSquare {
 		backgroundColor = AnsiHighlightedSquareBackground
 	} else if isSquareDark {
 		backgroundColor = AnsiBlackSquareBackground
@@ -53,21 +59,21 @@ func GetPieceSprite(figure piece.Piece, isHighLighted bool) string {
 	return ColorizeSprite(sprite, pieceColor, IsSquareDark(pieceCoords), isHighLighted)
 }
 
-func SelectUnicodeSpriteForPiece(curPiece piece.Piece) string {
+func SelectUnicodeSpriteForPiece(figure piece.Piece) string {
 	var sprite string
-	switch curPiece.(type) {
+	switch figure.(type) {
 	case *piece.Pawn:
-		sprite = " ♟ "
+		sprite = PawnSprite
 	case *piece.Knight:
-		sprite = " ♞ "
+		sprite = KnightSprite
 	case *piece.Bishop:
-		sprite = " ♝ "
+		sprite = BishopSprite
 	case *piece.Rock:
-		sprite = " ♜ "
+		sprite = RockSprite
 	case *piece.Queen:
-		sprite = " ♛ "
+		sprite = QueenSprite
 	case *piece.King:
-		sprite = " ♚ "
+		sprite = KingSprite
 	}
 	return sprite
 }
