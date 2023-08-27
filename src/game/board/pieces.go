@@ -3,6 +3,7 @@ package board
 import (
 	"chess/src/game/color"
 	"chess/src/game/coords"
+	"chess/src/game/move"
 	"chess/src/game/piece"
 )
 
@@ -34,4 +35,7 @@ func (b *Board) MovePiece(from, to coords.Coordinates) {
 	figure, _ := b.GetPiece(from)
 	b.RemovePiece(from)
 	b.SetPiece(to, figure)
+
+	curMove := move.NewMove(from, to, figure, figure.Color())
+	b.Moves = append(b.Moves, curMove)
 }
