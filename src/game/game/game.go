@@ -5,7 +5,6 @@ import (
 	"chess/src/game/color"
 	"chess/src/game/inputCoords"
 	"chess/src/game/render"
-	"fmt"
 )
 
 func GameLoop(board *board.Board) {
@@ -17,8 +16,6 @@ func GameLoop(board *board.Board) {
 		} else {
 			pieceColor = color.Black
 		}
-		fmt.Println(board.IsKingInCheck(pieceColor))
-
 		//render
 		render.RenderBoard(pieceColor, board)
 

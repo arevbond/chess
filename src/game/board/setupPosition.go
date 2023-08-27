@@ -12,6 +12,7 @@ import (
 
 func (b *Board) SetupPositionFromFEN(fen string) {
 	// fen: "rnbqkbn1/pppppppp/8/7r/8/8/PPPPPPPP/RNBQKBN1 w Qq - 0 1"
+	b.startFen = fen
 	parts := strings.Split(fen, " ")
 	piecePositions := parts[0]
 	fenRows := strings.Split(piecePositions, "/")

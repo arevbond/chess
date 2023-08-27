@@ -402,6 +402,22 @@ func TestBoard_KingAvailableMoves(t *testing.T) {
 				{coords.D, coords.File(5)},
 				{coords.E, coords.File(5)},
 			}},
+		{"k7/8/8/5B2/8/8/2R5/q2K4 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(1)),
+			2,
+			[]coords.Coordinates{
+				{coords.D, coords.File(2)},
+				{coords.E, coords.File(2)},
+			}},
+		{"k7/8/8/5B2/8/3K4/2R5/q5b1 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(3)),
+			4,
+			[]coords.Coordinates{
+				{coords.D, coords.File(2)},
+				{coords.E, coords.File(2)},
+				{coords.E, coords.File(4)},
+				{coords.C, coords.File(4)},
+			}},
 	}
 	for _, tt := range tests3 {
 		gameBoard = BoardFromFen(tt.fen)
@@ -446,6 +462,20 @@ func TestBoard_KingAvailableMoves(t *testing.T) {
 				{coords.D, coords.File(5)},
 				{coords.E, coords.File(5)},
 			}},
+		{"K3R3/8/8/8/8/8/Q7/5k2 w - - 0 1",
+			coords.NewCoordinates(coords.F, coords.File(1)),
+			1,
+			[]coords.Coordinates{
+				{coords.G, coords.File(1)},
+			}},
+		{"K7/8/2Q5/8/5N2/8/8/5k2 w - - 0 1",
+			coords.NewCoordinates(coords.F, coords.File(1)),
+			3,
+			[]coords.Coordinates{
+				{coords.G, coords.File(1)},
+				{coords.E, coords.File(1)},
+				{coords.F, coords.File(2)},
+			}},
 	}
 	for _, tt := range tests {
 		gameBoard = BoardFromFen(tt.fen)
@@ -467,41 +497,45 @@ func TestBoard_KingAvailableMoves(t *testing.T) {
 }
 
 func TestBoard_PawnAvailableMoves(t *testing.T) {
-	var fen string
-	var gameBoard *Board
 	var availableMoves map[coords.Coordinates]bool
 
 	// check available moves for pawn
 	// white pawn
-	fen = "8/pN1N4/1P1P1n1n/6P1/1n6/n4P2/PP1P4/8 w - - 0 1"
-	gameBoard = BoardFromFen(fen)
 	var tests = []struct {
+		fen           string
 		pieceCoords   coords.Coordinates
 		lenLegalMoves int
 		legalMoves    []coords.Coordinates
 	}{
-		{coords.NewCoordinates(coords.A, coords.File(2)), 0, nil},
-		{coords.NewCoordinates(coords.B, coords.File(2)), 2, []coords.Coordinates{
-			coords.NewCoordinates(coords.A, coords.File(3)),
-			coords.NewCoordinates(coords.B, coords.File(3)),
-		}},
-		{coords.NewCoordinates(coords.B, coords.File(6)), 1, []coords.Coordinates{
-			coords.NewCoordinates(coords.A, coords.File(7)),
-		}},
-		{coords.NewCoordinates(coords.D, coords.File(2)), 2, []coords.Coordinates{
-			coords.NewCoordinates(coords.D, coords.File(3)),
-			coords.NewCoordinates(coords.D, coords.File(4)),
-		}},
-		{coords.NewCoordinates(coords.F, coords.File(3)), 1, []coords.Coordinates{
-			coords.NewCoordinates(coords.F, coords.File(4)),
-		}},
-		{coords.NewCoordinates(coords.G, coords.File(5)), 3, []coords.Coordinates{
-			coords.NewCoordinates(coords.G, coords.File(6)),
-			coords.NewCoordinates(coords.F, coords.File(6)),
-			coords.NewCoordinates(coords.H, coords.File(6)),
-		}},
+		{"8/pN1N4/1P1P1n1n/6P1/1n6/n4P2/PP1P4/8 w - - 0 1",
+			coords.NewCoordinates(coords.A, coords.File(2)), 0, nil},
+		{"8/pN1N4/1P1P1n1n/6P1/1n6/n4P2/PP1P4/8 w - - 0 1",
+			coords.NewCoordinates(coords.B, coords.File(2)), 2, []coords.Coordinates{
+				coords.NewCoordinates(coords.A, coords.File(3)),
+				coords.NewCoordinates(coords.B, coords.File(3)),
+			}},
+		{"8/pN1N4/1P1P1n1n/6P1/1n6/n4P2/PP1P4/8 w - - 0 1",
+			coords.NewCoordinates(coords.B, coords.File(6)), 1, []coords.Coordinates{
+				coords.NewCoordinates(coords.A, coords.File(7)),
+			}},
+		{"8/pN1N4/1P1P1n1n/6P1/1n6/n4P2/PP1P4/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(2)), 2, []coords.Coordinates{
+				coords.NewCoordinates(coords.D, coords.File(3)),
+				coords.NewCoordinates(coords.D, coords.File(4)),
+			}},
+		{"8/pN1N4/1P1P1n1n/6P1/1n6/n4P2/PP1P4/8 w - - 0 1",
+			coords.NewCoordinates(coords.F, coords.File(3)), 1, []coords.Coordinates{
+				coords.NewCoordinates(coords.F, coords.File(4)),
+			}},
+		{"8/pN1N4/1P1P1n1n/6P1/1n6/n4P2/PP1P4/8 w - - 0 1",
+			coords.NewCoordinates(coords.G, coords.File(5)), 3, []coords.Coordinates{
+				coords.NewCoordinates(coords.G, coords.File(6)),
+				coords.NewCoordinates(coords.F, coords.File(6)),
+				coords.NewCoordinates(coords.H, coords.File(6)),
+			}},
 	}
 	for _, tt := range tests {
+		gameBoard := BoardFromFen(tt.fen)
 		pawn, ok := gameBoard.GetPiece(tt.pieceCoords)
 		if !ok {
 			t.Errorf("not piece on %q%d", tt.pieceCoords.Rank, tt.pieceCoords.File)
@@ -513,45 +547,58 @@ func TestBoard_PawnAvailableMoves(t *testing.T) {
 		for _, coordinates := range tt.legalMoves {
 			if _, ok2 := availableMoves[coordinates]; !ok2 {
 				t.Errorf("move piece %q from %q%d to %q%d should be legal\nCurrent fen: %s", pawn.Name(), pawn.Coordinates().Rank,
-					pawn.Coordinates().File, coordinates.Rank, coordinates.File, fen)
+					pawn.Coordinates().File, coordinates.Rank, coordinates.File, tt.fen)
 			}
 		}
 	}
 	// black pawn
-	fen = "8/2p1p2p/2pP1Pp1/1p6/1R6/3p4/2N1Q3/8 w - - 0 1"
-	gameBoard = BoardFromFen(fen)
 	var tests2 = []struct {
+		fen           string
 		pieceCoords   coords.Coordinates
 		lenLegalMoves int
 		legalMoves    []coords.Coordinates
 	}{
-		{coords.NewCoordinates(coords.B, coords.File(5)), 0, nil},
-		{coords.NewCoordinates(coords.C, coords.File(7)), 1, []coords.Coordinates{
-			coords.NewCoordinates(coords.D, coords.File(6)),
-		}},
-		{coords.NewCoordinates(coords.C, coords.File(6)), 1, []coords.Coordinates{
-			coords.NewCoordinates(coords.C, coords.File(5)),
-		}},
-		{coords.NewCoordinates(coords.D, coords.File(3)), 3, []coords.Coordinates{
-			coords.NewCoordinates(coords.D, coords.File(2)),
-			coords.NewCoordinates(coords.C, coords.File(2)),
-			coords.NewCoordinates(coords.E, coords.File(2)),
-		}},
-		{coords.NewCoordinates(coords.E, coords.File(7)), 4, []coords.Coordinates{
-			coords.NewCoordinates(coords.E, coords.File(6)),
-			coords.NewCoordinates(coords.E, coords.File(5)),
-			coords.NewCoordinates(coords.D, coords.File(6)),
-			coords.NewCoordinates(coords.F, coords.File(6)),
-		}},
-		{coords.NewCoordinates(coords.G, coords.File(6)), 1, []coords.Coordinates{
-			coords.NewCoordinates(coords.G, coords.File(5)),
-		}},
-		{coords.NewCoordinates(coords.H, coords.File(7)), 2, []coords.Coordinates{
-			coords.NewCoordinates(coords.H, coords.File(6)),
-			coords.NewCoordinates(coords.H, coords.File(5)),
-		}},
+		{"8/2p1p2p/2pP1Pp1/1p6/1R6/3p4/2N1Q3/8 w - - 0 1",
+			coords.NewCoordinates(coords.B, coords.File(5)), 0, nil},
+		{"8/2p1p2p/2pP1Pp1/1p6/1R6/3p4/2N1Q3/8 w - - 0 1",
+			coords.NewCoordinates(coords.C, coords.File(7)), 1, []coords.Coordinates{
+				coords.NewCoordinates(coords.D, coords.File(6)),
+			}},
+		{"8/2p1p2p/2pP1Pp1/1p6/1R6/3p4/2N1Q3/8 w - - 0 1",
+			coords.NewCoordinates(coords.C, coords.File(6)), 1, []coords.Coordinates{
+				coords.NewCoordinates(coords.C, coords.File(5)),
+			}},
+		{"8/2p1p2p/2pP1Pp1/1p6/1R6/3p4/2N1Q3/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(3)), 3, []coords.Coordinates{
+				coords.NewCoordinates(coords.D, coords.File(2)),
+				coords.NewCoordinates(coords.C, coords.File(2)),
+				coords.NewCoordinates(coords.E, coords.File(2)),
+			}},
+		{"8/2p1p2p/2pP1Pp1/1p6/1R6/3p4/2N1Q3/8 w - - 0 1",
+			coords.NewCoordinates(coords.E, coords.File(7)), 4, []coords.Coordinates{
+				coords.NewCoordinates(coords.E, coords.File(6)),
+				coords.NewCoordinates(coords.E, coords.File(5)),
+				coords.NewCoordinates(coords.D, coords.File(6)),
+				coords.NewCoordinates(coords.F, coords.File(6)),
+			}},
+		{"8/2p1p2p/2pP1Pp1/1p6/1R6/3p4/2N1Q3/8 w - - 0 1",
+			coords.NewCoordinates(coords.G, coords.File(6)), 1, []coords.Coordinates{
+				coords.NewCoordinates(coords.G, coords.File(5)),
+			}},
+		{"8/2p1p2p/2pP1Pp1/1p6/1R6/3p4/2N1Q3/8 w - - 0 1",
+			coords.NewCoordinates(coords.H, coords.File(7)), 2, []coords.Coordinates{
+				coords.NewCoordinates(coords.H, coords.File(6)),
+				coords.NewCoordinates(coords.H, coords.File(5)),
+			}},
+		{"8/8/8/8/8/8/1r3PK1/8 w - - 0 1",
+			coords.NewCoordinates(coords.F, coords.File(2)), 0, []coords.Coordinates{}},
+		{"8/8/8/8/8/1r4K1/5P2/8 w - - 0 1",
+			coords.NewCoordinates(coords.F, coords.File(2)), 1, []coords.Coordinates{
+				coords.NewCoordinates(coords.F, coords.File(3)),
+			}},
 	}
 	for _, tt := range tests2 {
+		gameBoard := BoardFromFen(tt.fen)
 		pawn, ok := gameBoard.GetPiece(tt.pieceCoords)
 		if !ok {
 			t.Errorf("not piece on %q%d", tt.pieceCoords.Rank, tt.pieceCoords.File)
@@ -563,297 +610,305 @@ func TestBoard_PawnAvailableMoves(t *testing.T) {
 		for _, coordinates := range tt.legalMoves {
 			if _, ok2 := availableMoves[coordinates]; !ok2 {
 				t.Errorf("move piece %q from %q%d to %q%d should be legal\nCurrent fen: %s", pawn.Name(), pawn.Coordinates().Rank,
-					pawn.Coordinates().File, coordinates.Rank, coordinates.File, fen)
+					pawn.Coordinates().File, coordinates.Rank, coordinates.File, tt.fen)
 			}
 		}
 	}
 }
 
 func TestBoard_QueenAvailableMoves(t *testing.T) {
-	var fen string
-	var gameBoard *Board
 	var availableMoves map[coords.Coordinates]bool
-	var legalMoves []coords.Coordinates
-
-	// check available moves for queen
-	// white queen
-	fen = "3k4/6p1/3B1p2/2N5/1r1Q1N2/8/1N3P2/3K4 w - - 0 1"
-	gameBoard = BoardFromFen(fen) // queen on d4
-	queen, _ := gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves = gameBoard.AvailableMoves(queen)
-	legalMoves = []coords.Coordinates{
-		{coords.B, coords.File(4)},
-		{coords.C, coords.File(4)},
-		{coords.C, coords.File(3)},
-		{coords.E, coords.File(4)},
-		{coords.D, coords.File(5)},
-		{coords.D, coords.File(3)},
-		{coords.D, coords.File(2)},
-		{coords.E, coords.File(5)},
-		{coords.E, coords.File(3)},
-		{coords.F, coords.File(6)},
+	var tests = []struct {
+		fen           string
+		pieceCoords   coords.Coordinates
+		lenLegalMoves int
+		legalMoves    []coords.Coordinates
+	}{
+		{"3k4/6p1/3B1p2/2N5/1r1Q1N2/8/1N3P2/3K4 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 10, []coords.Coordinates{
+				{coords.B, coords.File(4)},
+				{coords.C, coords.File(4)},
+				{coords.C, coords.File(3)},
+				{coords.E, coords.File(4)},
+				{coords.D, coords.File(5)},
+				{coords.D, coords.File(3)},
+				{coords.D, coords.File(2)},
+				{coords.E, coords.File(5)},
+				{coords.E, coords.File(3)},
+				{coords.F, coords.File(6)},
+			}},
+		{"8/3P4/1P3P2/8/1P1Q2P1/8/1P3P2/3P4 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 11, []coords.Coordinates{
+				{coords.C, coords.File(3)},
+				{coords.C, coords.File(4)},
+				{coords.C, coords.File(5)},
+				{coords.D, coords.File(6)},
+				{coords.D, coords.File(5)},
+				{coords.D, coords.File(3)},
+				{coords.D, coords.File(2)},
+				{coords.E, coords.File(3)},
+				{coords.E, coords.File(4)},
+				{coords.E, coords.File(5)},
+				{coords.F, coords.File(4)},
+			}},
+		{"3p4/8/5n2/2p5/2pq2N1/2R5/5P2/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 13, []coords.Coordinates{
+				{coords.C, coords.File(3)},
+				{coords.D, coords.File(7)},
+				{coords.D, coords.File(6)},
+				{coords.D, coords.File(5)},
+				{coords.D, coords.File(3)},
+				{coords.D, coords.File(2)},
+				{coords.D, coords.File(1)},
+				{coords.E, coords.File(3)},
+				{coords.E, coords.File(4)},
+				{coords.E, coords.File(5)},
+				{coords.F, coords.File(2)},
+				{coords.F, coords.File(4)},
+				{coords.G, coords.File(4)},
+			}},
+		{"8/3p4/1p3p2/8/1p1q2p1/8/1p3p2/3p4 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 11, []coords.Coordinates{
+				{coords.C, coords.File(3)},
+				{coords.C, coords.File(4)},
+				{coords.C, coords.File(5)},
+				{coords.D, coords.File(2)},
+				{coords.D, coords.File(3)},
+				{coords.D, coords.File(5)},
+				{coords.D, coords.File(6)},
+				{coords.E, coords.File(3)},
+				{coords.E, coords.File(4)},
+				{coords.E, coords.File(5)},
+				{coords.F, coords.File(4)},
+			}},
+		{"8/8/8/1KQ3r1/8/8/8/8 w - - 0 1",
+			coords.NewCoordinates(coords.C, coords.File(5)), 4, []coords.Coordinates{
+				{coords.D, coords.File(5)},
+				{coords.E, coords.File(5)},
+				{coords.F, coords.File(5)},
+				{coords.G, coords.File(5)},
+			}},
+		{"8/4Q3/8/1K4r1/8/8/8/8 w - - 0 1",
+			coords.NewCoordinates(coords.E, coords.File(7)), 3, []coords.Coordinates{
+				{coords.C, coords.File(5)},
+				{coords.E, coords.File(5)},
+				{coords.G, coords.File(5)},
+			}},
 	}
-	if len(legalMoves) != len(availableMoves) {
-		t.Errorf("len available moves don't match len legal moves")
-	}
-	for _, coordinates := range legalMoves {
-		if _, ok := availableMoves[coordinates]; !ok {
-			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", queen.Name(), coordinates.Rank,
-				coordinates.File, fen)
-
+	for _, tt := range tests {
+		gameBoard := BoardFromFen(tt.fen)
+		pawn, ok := gameBoard.GetPiece(tt.pieceCoords)
+		if !ok {
+			t.Errorf("not piece on %q%d", tt.pieceCoords.Rank, tt.pieceCoords.File)
 		}
-	}
-	fen = "8/3P4/1P3P2/8/1P1Q2P1/8/1P3P2/3P4 w - - 0 1"
-	gameBoard = BoardFromFen(fen) // queen on d4
-	queen, _ = gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves = gameBoard.AvailableMoves(queen)
-	legalMoves = []coords.Coordinates{
-		{coords.C, coords.File(3)},
-		{coords.C, coords.File(4)},
-		{coords.C, coords.File(5)},
-		{coords.D, coords.File(6)},
-		{coords.D, coords.File(5)},
-		{coords.D, coords.File(3)},
-		{coords.D, coords.File(2)},
-		{coords.E, coords.File(3)},
-		{coords.E, coords.File(4)},
-		{coords.E, coords.File(5)},
-		{coords.F, coords.File(4)},
-	}
-	if len(legalMoves) != len(availableMoves) {
-		t.Errorf("len available moves don't match len legal moves")
-	}
-	for _, coordinates := range legalMoves {
-		if _, ok := availableMoves[coordinates]; !ok {
-			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", queen.Name(), coordinates.Rank,
-				coordinates.File, fen)
-
+		availableMoves = gameBoard.AvailableMoves(pawn)
+		if len(availableMoves) != tt.lenLegalMoves {
+			t.Errorf("want len legal moves: %d - have len legal moves: %d", tt.lenLegalMoves, len(availableMoves))
 		}
-	}
-	// black queen
-	fen = "3p4/8/5n2/2p5/2pq2N1/2R5/5P2/8 w - - 0 1"
-	gameBoard = BoardFromFen(fen) // queen on d4
-	queen, _ = gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves = gameBoard.AvailableMoves(queen)
-	legalMoves = []coords.Coordinates{
-		{coords.C, coords.File(3)},
-		{coords.D, coords.File(7)},
-		{coords.D, coords.File(6)},
-		{coords.D, coords.File(5)},
-		{coords.D, coords.File(3)},
-		{coords.D, coords.File(2)},
-		{coords.D, coords.File(1)},
-		{coords.E, coords.File(3)},
-		{coords.E, coords.File(4)},
-		{coords.E, coords.File(5)},
-		{coords.F, coords.File(2)},
-		{coords.F, coords.File(4)},
-		{coords.G, coords.File(4)},
-	}
-	if len(legalMoves) != len(availableMoves) {
-		t.Errorf("len available moves don't match len legal moves")
-	}
-	for _, coordinates := range legalMoves {
-		if _, ok := availableMoves[coordinates]; !ok {
-			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", queen.Name(), coordinates.Rank,
-				coordinates.File, fen)
-
-		}
-	}
-	fen = "8/3p4/1p3p2/8/1p1q2p1/8/1p3p2/3p4 w - - 0 1"
-	gameBoard = BoardFromFen(fen) // queen on d4
-	queen, _ = gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves = gameBoard.AvailableMoves(queen)
-	legalMoves = []coords.Coordinates{
-		{coords.C, coords.File(3)},
-		{coords.C, coords.File(4)},
-		{coords.C, coords.File(5)},
-		{coords.D, coords.File(6)},
-		{coords.D, coords.File(5)},
-		{coords.D, coords.File(3)},
-		{coords.D, coords.File(2)},
-		{coords.E, coords.File(3)},
-		{coords.E, coords.File(4)},
-		{coords.E, coords.File(5)},
-		{coords.F, coords.File(4)},
-	}
-	if len(legalMoves) != len(availableMoves) {
-		t.Errorf("len available moves don't match len legal moves")
-	}
-	for _, coordinates := range legalMoves {
-		if _, ok := availableMoves[coordinates]; !ok {
-			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", queen.Name(), coordinates.Rank,
-				coordinates.File, fen)
-
+		for _, coordinates := range tt.legalMoves {
+			if _, ok2 := availableMoves[coordinates]; !ok2 {
+				t.Errorf("move piece %q from %q%d to %q%d should be legal\nCurrent fen: %s", pawn.Name(), pawn.Coordinates().Rank,
+					pawn.Coordinates().File, coordinates.Rank, coordinates.File, tt.fen)
+			}
 		}
 	}
 }
 
 func TestBoard_KnightAvailableMoves(t *testing.T) {
-	var fen string
-	var gameBoard *Board
 	var availableMoves map[coords.Coordinates]bool
-	var legalMoves []coords.Coordinates
 
-	// check available moves for knight
-	// white knight
-	fen = "8/8/4n3/1NP1Pp2/3N4/2P1P3/2Q5/8 w - - 0 1"
-	gameBoard = BoardFromFen(fen) // knight on d4
-	knight, _ := gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves = gameBoard.AvailableMoves(knight)
-	legalMoves = []coords.Coordinates{
-		{coords.B, coords.File(3)},
-		{coords.C, coords.File(6)},
-		{coords.E, coords.File(6)},
-		{coords.E, coords.File(2)},
-		{coords.F, coords.File(3)},
-		{coords.F, coords.File(5)},
+	var tests = []struct {
+		fen           string
+		pieceCoords   coords.Coordinates
+		lenLegalMoves int
+		legalMoves    []coords.Coordinates
+	}{
+		{"8/8/4n3/1NP1Pp2/3N4/2P1P3/2Q5/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 6, []coords.Coordinates{
+				{coords.B, coords.File(3)},
+				{coords.C, coords.File(6)},
+				{coords.E, coords.File(6)},
+				{coords.E, coords.File(2)},
+				{coords.F, coords.File(3)},
+				{coords.F, coords.File(5)},
+			}},
+		{"8/8/4p3/1Nn2p2/2nn4/2p1P3/2Q1N3/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 6, []coords.Coordinates{
+				{coords.B, coords.File(3)},
+				{coords.B, coords.File(5)},
+				{coords.C, coords.File(2)},
+				{coords.C, coords.File(6)},
+				{coords.E, coords.File(2)},
+				{coords.F, coords.File(3)},
+			}},
+		{"8/8/4p3/1Nn2p2/2nn4/2p1P3/2Q1N3/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 6, []coords.Coordinates{
+				{coords.B, coords.File(3)},
+				{coords.B, coords.File(5)},
+				{coords.C, coords.File(2)},
+				{coords.C, coords.File(6)},
+				{coords.E, coords.File(2)},
+				{coords.F, coords.File(3)},
+			}},
+		{"8/8/3N4/8/1K4q1/8/8/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(6)), 2, []coords.Coordinates{
+				{coords.C, coords.File(4)},
+				{coords.E, coords.File(4)},
+			}},
+		{"8/8/3n4/8/1k4Q1/8/8/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(6)), 2, []coords.Coordinates{
+				{coords.C, coords.File(4)},
+				{coords.E, coords.File(4)},
+			}},
 	}
-	if len(legalMoves) != len(availableMoves) {
-		t.Errorf("len available moves don't match len legal moves")
-	}
-	for _, coordinates := range legalMoves {
-		if _, ok := availableMoves[coordinates]; !ok {
-			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", knight.Name(), coordinates.Rank,
-				coordinates.File, fen)
-
+	for _, tt := range tests {
+		gameBoard := BoardFromFen(tt.fen)
+		pawn, ok := gameBoard.GetPiece(tt.pieceCoords)
+		if !ok {
+			t.Errorf("not piece on %q%d", tt.pieceCoords.Rank, tt.pieceCoords.File)
 		}
-	}
-	// black knight
-	fen = "8/8/4p3/1Nn2p2/2nn4/2p1P3/2Q1N3/8 w - - 0 1"
-	gameBoard = BoardFromFen(fen) // knight on d4
-	knight, _ = gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves = gameBoard.AvailableMoves(knight)
-	legalMoves = []coords.Coordinates{
-		{coords.B, coords.File(3)},
-		{coords.B, coords.File(5)},
-		{coords.C, coords.File(2)},
-		{coords.C, coords.File(6)},
-		{coords.E, coords.File(2)},
-		{coords.F, coords.File(3)},
-	}
-	if len(legalMoves) != len(availableMoves) {
-		t.Errorf("len available moves don't match len legal moves")
-	}
-	for _, coordinates := range legalMoves {
-		if _, ok := availableMoves[coordinates]; !ok {
-			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", knight.Name(), coordinates.Rank,
-				coordinates.File, fen)
-
+		availableMoves = gameBoard.AvailableMoves(pawn)
+		if len(availableMoves) != tt.lenLegalMoves {
+			t.Errorf("want len legal moves: %d - have len legal moves: %d", tt.lenLegalMoves, len(availableMoves))
+		}
+		for _, coordinates := range tt.legalMoves {
+			if _, ok2 := availableMoves[coordinates]; !ok2 {
+				t.Errorf("move piece %q from %q%d to %q%d should be legal\nCurrent fen: %s", pawn.Name(), pawn.Coordinates().Rank,
+					pawn.Coordinates().File, coordinates.Rank, coordinates.File, tt.fen)
+			}
 		}
 	}
 }
 
 func TestBoard_BishopAvailableMoves(t *testing.T) {
-	var fen string
-	var gameBoard *Board
 	var availableMoves map[coords.Coordinates]bool
-	var legalMoves []coords.Coordinates
 
-	// check available moves for bishop
-	// white bishop
-	fen = "8/8/5n2/8/3B4/2N5/5N2/8 w - - 0 1"
-	gameBoard = BoardFromFen(fen) // bishop on d4
-	bishop, _ := gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves = gameBoard.AvailableMoves(bishop)
-	legalMoves = []coords.Coordinates{
-		{coords.A, coords.File(7)},
-		{coords.B, coords.File(6)},
-		{coords.C, coords.File(5)},
-		{coords.E, coords.File(3)},
-		{coords.E, coords.File(5)},
-		{coords.F, coords.File(6)},
+	var tests = []struct {
+		fen           string
+		pieceCoords   coords.Coordinates
+		lenLegalMoves int
+		legalMoves    []coords.Coordinates
+	}{
+		{"8/8/5n2/8/3B4/2N5/5N2/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 6, []coords.Coordinates{
+				{coords.A, coords.File(7)},
+				{coords.B, coords.File(6)},
+				{coords.C, coords.File(5)},
+				{coords.E, coords.File(3)},
+				{coords.E, coords.File(5)},
+				{coords.F, coords.File(6)},
+			}},
+		{"8/8/5n2/8/3b4/2N5/5N2/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 7, []coords.Coordinates{
+				{coords.A, coords.File(7)},
+				{coords.B, coords.File(6)},
+				{coords.C, coords.File(5)},
+				{coords.C, coords.File(3)},
+				{coords.E, coords.File(5)},
+				{coords.E, coords.File(3)},
+				{coords.F, coords.File(2)},
+			}},
+		{"8/3b4/8/8/k5Q1/8/8/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(7)), 1, []coords.Coordinates{
+				{coords.G, coords.File(4)},
+			}},
 	}
-	if len(legalMoves) != len(availableMoves) {
-		t.Errorf("len available moves don't match len legal moves")
-	}
-	for _, coordinates := range legalMoves {
-		if _, ok := availableMoves[coordinates]; !ok {
-			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", bishop.Name(), coordinates.Rank,
-				coordinates.File, fen)
-
+	for _, tt := range tests {
+		gameBoard := BoardFromFen(tt.fen)
+		pawn, ok := gameBoard.GetPiece(tt.pieceCoords)
+		if !ok {
+			t.Errorf("not piece on %q%d", tt.pieceCoords.Rank, tt.pieceCoords.File)
 		}
-	}
-	// black bishop
-	fen = "8/8/5n2/8/3b4/2N5/5N2/8 w - - 0 1"
-	gameBoard = BoardFromFen(fen) // bishop on d4
-	bishop, _ = gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves = gameBoard.AvailableMoves(bishop)
-	legalMoves = []coords.Coordinates{
-		{coords.A, coords.File(7)},
-		{coords.B, coords.File(6)},
-		{coords.C, coords.File(5)},
-		{coords.C, coords.File(3)},
-		{coords.E, coords.File(5)},
-		{coords.E, coords.File(3)},
-		{coords.F, coords.File(2)},
-	}
-	if len(legalMoves) != len(availableMoves) {
-		t.Errorf("len available moves don't match len legal moves")
-	}
-	for _, coordinates := range legalMoves {
-		if _, ok := availableMoves[coordinates]; !ok {
-			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", bishop.Name(), coordinates.Rank,
-				coordinates.File, fen)
-
+		availableMoves = gameBoard.AvailableMoves(pawn)
+		if len(availableMoves) != tt.lenLegalMoves {
+			t.Errorf("want len legal moves: %d - have len legal moves: %d", tt.lenLegalMoves, len(availableMoves))
+		}
+		for _, coordinates := range tt.legalMoves {
+			if _, ok2 := availableMoves[coordinates]; !ok2 {
+				t.Errorf("move piece %q from %q%d to %q%d should be legal\nCurrent fen: %s", pawn.Name(), pawn.Coordinates().Rank,
+					pawn.Coordinates().File, coordinates.Rank, coordinates.File, tt.fen)
+			}
 		}
 	}
 }
 
 func TestBoard_RockAvailableMoves(t *testing.T) {
-	var fen string
-	var gameBoard *Board
 	var availableMoves map[coords.Coordinates]bool
-	var legalMoves []coords.Coordinates
-
-	// check available moves for rock
-	// white rock
-	fen = "8/3r4/8/8/1N1Rn3/8/8/8 w - - 0 1"
-	gameBoard = BoardFromFen(fen) // rock on d4
-	rock, _ := gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves = gameBoard.AvailableMoves(rock)
-	legalMoves = []coords.Coordinates{
-		{coords.C, coords.File(4)},
-		{coords.D, coords.File(5)},
-		{coords.D, coords.File(6)},
-		{coords.D, coords.File(7)},
-		{coords.D, coords.File(3)},
-		{coords.D, coords.File(2)},
-		{coords.D, coords.File(1)},
-		{coords.E, coords.File(4)},
+	var tests = []struct {
+		fen           string
+		pieceCoords   coords.Coordinates
+		lenLegalMoves int
+		legalMoves    []coords.Coordinates
+	}{
+		{"8/3r4/8/8/1N1Rn3/8/8/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 8, []coords.Coordinates{
+				{coords.C, coords.File(4)},
+				{coords.D, coords.File(5)},
+				{coords.D, coords.File(6)},
+				{coords.D, coords.File(7)},
+				{coords.D, coords.File(3)},
+				{coords.D, coords.File(2)},
+				{coords.D, coords.File(1)},
+				{coords.E, coords.File(4)},
+			}},
+		{"8/3r4/8/8/1N1r2n1/8/3R4/8 w - - 0 1",
+			coords.NewCoordinates(coords.D, coords.File(4)), 8, []coords.Coordinates{
+				{coords.B, coords.File(4)},
+				{coords.C, coords.File(4)},
+				{coords.D, coords.File(5)},
+				{coords.D, coords.File(6)},
+				{coords.D, coords.File(3)},
+				{coords.D, coords.File(2)},
+				{coords.E, coords.File(4)},
+				{coords.F, coords.File(4)},
+			}},
+		{"8/8/8/8/kr4Q1/8/8/8 w - - 0 1",
+			coords.NewCoordinates(coords.B, coords.File(4)), 5, []coords.Coordinates{
+				{coords.C, coords.File(4)},
+				{coords.D, coords.File(4)},
+				{coords.E, coords.File(4)},
+				{coords.F, coords.File(4)},
+				{coords.G, coords.File(4)},
+			}},
 	}
-	if len(legalMoves) != len(availableMoves) {
-		t.Errorf("len available moves don't match len legal moves")
-	}
-	for _, coordinates := range legalMoves {
-		if _, ok := availableMoves[coordinates]; !ok {
-			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", rock.Name(), coordinates.Rank,
-				coordinates.File, fen)
-
+	for _, tt := range tests {
+		gameBoard := BoardFromFen(tt.fen)
+		pawn, ok := gameBoard.GetPiece(tt.pieceCoords)
+		if !ok {
+			t.Errorf("not piece on %q%d", tt.pieceCoords.Rank, tt.pieceCoords.File)
 		}
-	} // black rock
-	fen = "8/3r4/8/8/1N1r2n1/8/3R4/8 w - - 0 1"
-	gameBoard = BoardFromFen(fen) // rock on d4
-	rock, _ = gameBoard.GetPiece(coords.NewCoordinates(coords.D, coords.File(4)))
-	availableMoves = gameBoard.AvailableMoves(rock)
-	legalMoves = []coords.Coordinates{
-		{coords.B, coords.File(4)},
-		{coords.C, coords.File(4)},
-		{coords.D, coords.File(5)},
-		{coords.D, coords.File(6)},
-		{coords.D, coords.File(3)},
-		{coords.D, coords.File(2)},
-		{coords.E, coords.File(4)},
-		{coords.F, coords.File(4)},
+		availableMoves = gameBoard.AvailableMoves(pawn)
+		if len(availableMoves) != tt.lenLegalMoves {
+			t.Errorf("want len legal moves: %d - have len legal moves: %d", tt.lenLegalMoves, len(availableMoves))
+		}
+		for _, coordinates := range tt.legalMoves {
+			if _, ok2 := availableMoves[coordinates]; !ok2 {
+				t.Errorf("move piece %q from %q%d to %q%d should be legal\nCurrent fen: %s", pawn.Name(), pawn.Coordinates().Rank,
+					pawn.Coordinates().File, coordinates.Rank, coordinates.File, tt.fen)
+			}
+		}
 	}
-	if len(legalMoves) != len(availableMoves) {
-		t.Errorf("len available moves don't match len legal moves")
-	}
-	for _, coordinates := range legalMoves {
-		if _, ok := availableMoves[coordinates]; !ok {
-			t.Errorf("move piece %q to %q%d should be legal\nCurrent fen: %s", rock.Name(), coordinates.Rank,
-				coordinates.File, fen)
+}
 
+func TestBoard_IsKingInCheck(t *testing.T) {
+	var tests = []struct {
+		fen         string
+		kingIsCheck bool
+		kingColor   color.Color
+	}{
+		{"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", false, color.White},
+		{"k7/8/8/8/3q4/8/8/3K4 w - - 0 1", true, color.White},
+		{"k7/8/8/8/8/8/8/q2K4 w - - 0 1", true, color.White},
+		{"k7/8/8/8/6q1/8/8/3K4 w - - 0 1", true, color.White},
+		{"K7/8/8/8/6Q1/8/8/3k4 w - - 0 1", true, color.Black},
+		{"k7/8/8/8/6q1/8/4N3/3K4 w - - 0 1", false, color.White},
+		{"k7/8/2R5/5B2/3N4/8/8/q2K4 w - - 0 1 ", true, color.White},
+	}
+	for _, tt := range tests {
+		gameBoard := BoardFromFen(tt.fen)
+		have := gameBoard.IsKingInCheck(tt.kingColor)
+		if tt.kingIsCheck != have {
+			t.Errorf("%s - fen\nKing is check: %t, want %t\n", tt.fen, have, tt.kingIsCheck)
 		}
 	}
 }

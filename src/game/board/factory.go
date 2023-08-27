@@ -11,3 +11,11 @@ func BoardClassicStartPosition() *Board {
 	newBoard.SetupDefaultPiecesPositions()
 	return newBoard
 }
+
+func Copy(board *Board) *Board {
+	newBoard := BoardFromFen(board.startFen)
+	for _, m := range board.Moves {
+		newBoard.MovePiece(m.From, m.To)
+	}
+	return newBoard
+}

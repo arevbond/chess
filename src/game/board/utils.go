@@ -111,6 +111,9 @@ func SquaresBetween(from, to coords.Coordinates) []coords.Coordinates {
 }
 
 func (b *Board) IsKingInCheck(kingColor color.Color) bool {
-	king := b.GetKing(kingColor)
+	king, ok := b.GetKing(kingColor)
+	if !ok {
+		return false
+	}
 	return b.IsSquareAttackedByColor(king.Coordinates(), color.Opposite(kingColor))
 }

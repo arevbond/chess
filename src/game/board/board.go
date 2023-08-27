@@ -7,8 +7,9 @@ import (
 )
 
 type Board struct {
-	Pieces map[coords.Coordinates]piece.Piece
-	Moves  []move.Move
+	Pieces   map[coords.Coordinates]piece.Piece
+	Moves    []move.Move
+	startFen string
 }
 
 func NewBoard() *Board {

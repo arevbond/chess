@@ -7,11 +7,11 @@ import (
 )
 
 type Move struct {
-	from, to coords.Coordinates
-	figure   piece.Piece
-	color    color.Color
+	From, To    coords.Coordinates
+	Figure      piece.Piece
+	FigureColor color.Color
 }
 
 func NewMove(from, to coords.Coordinates, figure piece.Piece, color color.Color) Move {
-	return Move{from: from, to: to, figure: figure, color: color}
+	return Move{From: from, To: to, Figure: figure, FigureColor: color}
 }

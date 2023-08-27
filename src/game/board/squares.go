@@ -22,8 +22,25 @@ func (b *Board) AttackedSquaresByPiece(figure piece.Piece) map[coords.Coordinate
 		attackedSquares = b.AttackedSquaresByPawn(figure)
 	case "King":
 		attackedSquares = b.AttackedSquaresByKing(figure)
-	default:
+	case "Knight":
+		attackedSquares = b.AttackedSquaresByKnight(figure)
+	case "Queen", "Bishop", "Rock":
 		attackedSquares = b.AttackedSquaresByLongRangePiece(figure)
+	}
+	return attackedSquares
+}
+
+func (b *Board) AttackedSquaresByKnight(figure piece.Piece) map[coords.Coordinates]bool {
+	attackedSquares := map[coords.Coordinates]bool{}
+	shifts := figure.Shifts()
+	for shift, _ := range shifts {
+		if figure.Coordinates().CanShift(shift) {
+			newCoordinates := figure.Coordinates().Shift(shift)
+			if !b.IsSquareAvailableForAttackSimple(newCoordinates, figure) {
+				break
+			}
+			attackedSquares[newCoordinates] = true
+		}
 	}
 	return attackedSquares
 }
@@ -34,11 +51,10 @@ func (b *Board) AttackedSquaresByLongRangePiece(figure piece.Piece) map[coords.C
 	for shift, _ := range shifts {
 		if figure.Coordinates().CanShift(shift) {
 			newCoordinates := figure.Coordinates().Shift(shift)
-			if !b.IsSquareAvailableForAttackSimple(newCoordinates, figure) {
-				break
-			}
-			if b.IsSquareAttackedByLongRangePiece(newCoordinates, figure) {
-				attackedSquares[newCoordinates] = true
+			if b.IsSquareAvailableForAttackSimple(newCoordinates, figure) {
+				if b.IsSquareAttackedByLongRangePiece(newCoordinates, figure) {
+					attackedSquares[newCoordinates] = true
+				}
 			}
 		}
 	}
@@ -47,7 +63,7 @@ func (b *Board) AttackedSquaresByLongRangePiece(figure piece.Piece) map[coords.C
 
 func (b *Board) IsSquareAttackedByLongRangePiece(coordinates coords.Coordinates, figure piece.Piece) bool {
 	figureCoords := figure.Coordinates()
-	return !b.HasPieceOnWayForLongRangePiece2(figureCoords, coordinates)
+	return !b.HasPieceOnWayForLongRangePieceWithKing(figureCoords, coordinates)
 }
 
 func (b *Board) IsSquareAvailableForAttackSimple(coordinates coords.Coordinates, figure piece.Piece) bool {
@@ -59,7 +75,7 @@ func (b *Board) IsSquareAvailableForAttackSimple(coordinates coords.Coordinates,
 	return figure.Color() != otherPiece.Color()
 }
 
-func (b *Board) HasPieceOnWayForLongRangePiece2(from, to coords.Coordinates) bool {
+func (b *Board) HasPieceOnWayForLongRangePieceWithKing(from, to coords.Coordinates) bool {
 	var flag bool
 	coordsBetween := SquaresBetween(from, to)
 	ourPiece, _ := b.GetPiece(from)

@@ -9,11 +9,12 @@ import (
 
 func (b *Board) AvailableMoves(figure piece.Piece) map[coords.Coordinates]bool {
 	availableMoves := map[coords.Coordinates]bool{}
+	isKingCheck := b.IsKingInCheck(figure.Color())
 	shifts := figure.Shifts()
 	for shift, _ := range shifts {
 		if figure.Coordinates().CanShift(shift) {
 			newCoordinates := figure.Coordinates().Shift(shift)
-			if b.IsSquareAvailableForMove(newCoordinates, figure) {
+			if b.IsSquareAvailableForMove(newCoordinates, figure, isKingCheck) {
 				availableMoves[newCoordinates] = true
 			}
 		}
@@ -30,14 +31,27 @@ func (b *Board) IsSquareAvailableForMoveSimple(coordinates coords.Coordinates, f
 	return figure.Color() != otherPiece.Color() && otherPiece.Name() != "King"
 }
 
-func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, figure piece.Piece) bool {
+func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, figure piece.Piece, isKingCheck bool) bool {
 	if !b.IsSquareAvailableForMoveSimple(coordinates, figure) {
 		return false
 	}
 	var ans bool
+	if isKingCheck {
+		ans = b.IsSquareAvailableForMoveWithCheck(coordinates, figure)
+	} else {
+		ans = b.IsSquareAvailableForMoveByPiece(coordinates, figure)
+	}
+	if ans {
+		ans = b.IsSquareAvailableForMoveWithCheck(coordinates, figure)
+	}
+	return ans
+}
+
+func (b *Board) IsSquareAvailableForMoveByPiece(coordinates coords.Coordinates, figure piece.Piece) bool {
+	var ans bool
 	switch figure.Name() {
 	case "Knight":
-		ans = b.IsSquareAvailableForMoveSimple(coordinates, figure)
+		ans = b.IsSquareAvailableForMoveKnight(coordinates, figure)
 	case "Bishop", "Rock", "Queen":
 		ans = b.IsSquareAvailableForMoveLongRangePiece(coordinates, figure)
 	case "Pawn":
@@ -48,7 +62,28 @@ func (b *Board) IsSquareAvailableForMove(coordinates coords.Coordinates, figure 
 	return ans
 }
 
+func (b *Board) IsSquareAvailableForMoveWithCheck(coordinates coords.Coordinates, figure piece.Piece) bool {
+	copyBoard := Copy(b)
+	copyFigure, _ := copyBoard.GetPiece(figure.Coordinates())
+	if copyBoard.IsSquareAvailableForMoveByPiece(coordinates, copyFigure) {
+		copyBoard.MovePiece(copyFigure.Coordinates(), coordinates)
+		if !copyBoard.IsKingInCheck(copyFigure.Color()) {
+			return true
+		}
+	}
+	return false
+}
+
+func (b *Board) IsSquareAvailableForMoveKnight(coordinates coords.Coordinates, figure piece.Piece) bool {
+	if b.IsSquareEmpty(coordinates) {
+		return true
+	}
+	otherPiece, _ := b.GetPiece(coordinates)
+	return figure.Color() != otherPiece.Color() && otherPiece.Name() != "King"
+}
+
 func (b *Board) IsSquareAvailableForMovePawn(coordinates coords.Coordinates, figure piece.Piece) bool {
+	// TODO: Добавить взятие на проходе
 	var result bool
 	figureCoords := figure.Coordinates()
 	if figureCoords.Rank == coordinates.Rank {
@@ -75,7 +110,6 @@ func (b *Board) IsSquareAvailableForMovePawn(coordinates coords.Coordinates, fig
 }
 
 func (b *Board) IsSquareAvailableForMoveKing(coordinates coords.Coordinates, figure piece.Piece) bool {
-	//figureCoords := figure.Coordinates()
 	return !b.IsSquareAttackedByColor(coordinates, color.Opposite(figure.Color()))
 }
 
