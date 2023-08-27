@@ -1,6 +1,7 @@
 package board
 
 import (
+	"chess/src/game/color"
 	"chess/src/game/coords"
 )
 
@@ -107,4 +108,9 @@ func SquaresBetween(from, to coords.Coordinates) []coords.Coordinates {
 		coordinates = DiagonalSquaresBetween(from, to)
 	}
 	return coordinates
+}
+
+func (b *Board) IsKingInCheck(kingColor color.Color) bool {
+	king := b.GetKing(kingColor)
+	return b.IsSquareAttackedByColor(king.Coordinates(), color.Opposite(kingColor))
 }

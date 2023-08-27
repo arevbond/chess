@@ -7,6 +7,17 @@ import (
 	"chess/src/game/piece"
 )
 
+func (b *Board) GetKing(kingColor color.Color) piece.Piece {
+	var king piece.Piece
+	for _, figure := range b.Pieces {
+		if figure.Name() == "King" && figure.Color() == kingColor {
+			king = figure
+			return king
+		}
+	}
+	return king
+}
+
 func (b *Board) SetPiece(coordinates coords.Coordinates, piece piece.Piece) {
 	piece.SetCoordinates(coordinates)
 	b.Pieces[coordinates] = piece
